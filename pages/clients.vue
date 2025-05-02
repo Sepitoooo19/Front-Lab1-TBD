@@ -1,39 +1,43 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { getAllClients, deleteClientById, } from '~/services/clientService'
-import { getOrdersByClientId } from '~/services/ordersService'
-import type { Client } from '~/types/types'
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { getAllClients, deleteClientById } from '~/services/clientService';
+import type { Client } from '~/types/types';
 
-const router = useRouter()
-const clients = ref<Client[]>([])
+const router = useRouter();
+const clients = ref<Client[]>([]);
 
 onMounted(async () => {
-  clients.value = await getAllClients()
-})
+  try {
+    clients.value = await getAllClients();
+  } catch (error) {
+    alert('Error al cargar los clientes');
+  }
+});
 
 const createClient = () => {
-  router.push('/clients') // Ruta para crear un cliente
-}
+  router.push('/clients/create'); // Ruta para crear un cliente
+};
 
 const editClient = (client: Client) => {
-  router.push(`/clients/${client.id}`) // Ruta para editar cliente
-}
+  router.push(`/clients/${client.id}/edit`); // Ruta para editar cliente
+};
 
 const deleteClient = async (clientId: number) => {
-  const confirmDelete = confirm('¿Estás seguro que deseas eliminar este cliente?')
+  const confirmDelete = confirm('¿Estás seguro que deseas eliminar este cliente?');
   if (confirmDelete) {
-    await deleteClientById(clientId)
-    clients.value = await getAllClients() // Refrescar lista
+    try {
+      await deleteClientById(clientId);
+      clients.value = await getAllClients(); // Refrescar lista
+    } catch (error) {
+      alert('Error al eliminar el cliente');
+    }
   }
-}
-
+};
 
 const viewOrders = (clientId: number) => {
-  router.push(`/clientOrdersView/${clientId}`)
-}
-
-// Ver pedidos de un cliente
+  router.push(`/clients/${clientId}/orders`); // Ruta para ver órdenes
+};
 </script>
 
 <template>
@@ -74,7 +78,7 @@ const viewOrders = (clientId: number) => {
           <td class="px-4 py-2 space-x-2">
             <button
               class="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-1 px-2 rounded"
-              @click="router.push(`/edit-clients-${client.id}`)"
+              @click="editClient(client)"
             >
               Editar
             </button>
@@ -85,7 +89,7 @@ const viewOrders = (clientId: number) => {
               Eliminar
             </button>
             <button
-              @click="router.push(`/client-orders-${client.id}`)"
+              @click="viewOrders(client.id)"
               class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
             >
               Ver órdenes
@@ -96,3 +100,6 @@ const viewOrders = (clientId: number) => {
     </table>
   </div>
 </template>
+
+<style scoped>
+</style>
