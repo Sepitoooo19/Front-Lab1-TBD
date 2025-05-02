@@ -45,7 +45,7 @@ const handleLogin = async () => {
           router.push('/home-admin');
           break;
         default:
-          throw new Error('Rol desconocido');
+          throw new Error('Rol desconocido, por favor asignar un rol correcto');
       }
     } else {
       throw new Error(response?.message || 'Error al iniciar sesión');
