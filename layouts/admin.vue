@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="flex flex-col min-h-screen">
       <header class="bg-red-600 text-white py-4 w-full">
         <div class="flex justify-between items-center px-4">
           <h1 class="text-2xl font-bold">Administrador - Sistema de Delivery</h1>
@@ -9,11 +9,11 @@
             <li><a href="/products" class="hover:underline">Productos</a></li>
             <li><a href="/orders" class="hover:underline">Pedidos</a></li>
             <li><a href="/repartidores" class="hover:underline">Repartidores</a></li>
-            <li><a href="/logout" class="hover:underline">Cerrar Sesión</a></li>
+            <li><a href="/login" class="hover:underline">Cerrar Sesión</a></li>
           </ul>
         </div>
       </header>
-      <main class="container mx-auto py-8">
+      <main class="flex-grow container mx-auto py-8">
         <NuxtPage />
       </main>
       <footer class="bg-gray-800 text-white py-4">
@@ -25,7 +25,9 @@
   </template>
   
   <style scoped>
-  header {
-    width: 100%;
+  /* Asegurar diseño horizontal para el header */
+  header ul {
+    display: flex;
+    gap: 1rem; /* Espaciado entre los botones */
   }
   </style>

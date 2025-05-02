@@ -14,6 +14,7 @@
   </template>
   
   <style scoped>
+  /* Estructura para sticky footer */
   .flex {
     display: flex;
     flex-direction: column;
