@@ -2,10 +2,14 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { getAllClients, deleteClientById } from '~/services/clientService';
-import type { Client } from '~/types/types';
+import { getOrdersByClientId } from '~/services/ordersService';
+import type { Client, Order } from '~/types/types';
 
 const router = useRouter();
 const clients = ref<Client[]>([]);
+const orders = ref<Order[]>([]); // Lista de órdenes del cliente seleccionado
+const isOrdersModalOpen = ref(false); // Estado del modal
+const selectedClientName = ref(''); // Nombre del cliente seleccionado
 
 onMounted(async () => {
   try {
@@ -35,8 +39,19 @@ const deleteClient = async (clientId: number) => {
   }
 };
 
-const viewOrders = (clientId: number) => {
-  router.push(`/clients/${clientId}/orders`); // Ruta para ver órdenes
+const viewOrders = async (clientId: number, clientName: string) => {
+  try {
+    orders.value = await getOrdersByClientId(clientId); // Obtiene las órdenes del cliente
+    selectedClientName.value = clientName; // Guarda el nombre del cliente seleccionado
+    isOrdersModalOpen.value = true; // Abre el modal
+  } catch (error) {
+    alert('Error al obtener las órdenes del cliente');
+  }
+};
+
+const closeOrdersModal = () => {
+  isOrdersModalOpen.value = false; // Cierra el modal
+  orders.value = []; // Limpia las órdenes
 };
 </script>
 
@@ -89,7 +104,7 @@ const viewOrders = (clientId: number) => {
               Eliminar
             </button>
             <button
-              @click="viewOrders(client.id)"
+              @click="viewOrders(client.id, client.name)"
               class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
             >
               Ver órdenes
@@ -98,6 +113,43 @@ const viewOrders = (clientId: number) => {
         </tr>
       </tbody>
     </table>
+
+    <!-- Modal para mostrar órdenes -->
+    <div
+      v-if="isOrdersModalOpen"
+      class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center"
+    >
+      <div class="bg-white p-6 rounded shadow-lg w-3/4">
+        <h2 class="text-xl font-bold mb-4">Órdenes de {{ selectedClientName }}</h2>
+        <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow">
+          <thead class="bg-gray-100">
+            <tr>
+              <th class="px-4 py-2 text-left">ID</th>
+              <th class="px-4 py-2 text-left">Fecha de Orden</th>
+              <th class="px-4 py-2 text-left">Fecha de Entrega</th>
+              <th class="px-4 py-2 text-left">Estado</th>
+              <th class="px-4 py-2 text-left">Productos</th>
+              <th class="px-4 py-2 text-left">Precio Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="order in orders" :key="order.id" class="hover:bg-gray-50">
+              <td class="px-4 py-2">{{ order.id }}</td>
+              <td class="px-4 py-2">{{ order.orderDate }}</td>
+              <td class="px-4 py-2">{{ order.deliveryDate }}</td>
+              <td class="px-4 py-2">{{ order.status }}</td>
+              <td class="px-4 py-2">{{ order.products }}</td>
+              <td class="px-4 py-2">{{ order.totalPrice }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="flex justify-end mt-4">
+          <button @click="closeOrdersModal" class="bg-red-500 text-white px-4 py-2 rounded">
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

@@ -8,7 +8,7 @@
             <li><a href="/clients" class="hover:underline">Clientes</a></li>
             <li><a href="/products" class="hover:underline">Productos</a></li>
             <li><a href="/orders" class="hover:underline">Pedidos</a></li>
-            <li><a href="/repartidores" class="hover:underline">Repartidores</a></li>
+            <li><a href="/dealers" class="hover:underline">Repartidores</a></li>
             <li><a href="/login" class="hover:underline">Cerrar Sesión</a></li>
           </ul>
         </div>

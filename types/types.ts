@@ -17,3 +17,13 @@ export interface Order {
   products: number
   totalPrice: number
 }
+
+export interface Dealer {
+  id: number
+  name: string
+  rut: string
+  phone: string
+  email: string
+  plate: string
+  vehicle: string
+}
