@@ -1,135 +1,203 @@
-<template>
-    <div class="register max-w-md mx-auto bg-white p-8 shadow-md rounded">
-      <h1 class="text-2xl font-bold mb-4 text-center">Registro</h1>
-      <form @submit.prevent="handleRegister">
-        <!-- Username -->
-        <div class="mb-4">
-          <label for="username" class="block text-sm font-medium">Usuario</label>
-          <input
-            type="text"
-            id="username"
-            v-model="form.username"
-            class="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-primary"
-            required
-          />
-        </div>
-  
-        <!-- Password -->
-        <div class="mb-4">
-          <label for="password" class="block text-sm font-medium">Contraseña</label>
-          <input
-            type="password"
-            id="password"
-            v-model="form.password"
-            class="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-primary"
-            required
-          />
-        </div>
-  
-        <!-- Role -->
-        <div class="mb-4">
-          <label for="role" class="block text-sm font-medium">Rol</label>
-          <select
-            id="role"
-            v-model="form.role"
-            @change="updateFields"
-            class="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-primary"
-          >
-            <option value="cliente">Cliente</option>
-            <option value="repartidor">Repartidor</option>
-            <option value="administrador">Administrador</option>
-          </select>
-        </div>
-  
-        <!-- Dynamic Fields -->
-        <template v-if="form.role === 'cliente'">
-          <div class="mb-4">
-            <label for="address" class="block text-sm font-medium">Dirección</label>
-            <input
-              type="text"
-              id="address"
-              v-model="form.address"
-              class="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-primary"
-              required
-            />
-          </div>
-        </template>
-  
-        <template v-if="form.role === 'repartidor'">
-          <div class="mb-4">
-            <label for="vehicle" class="block text-sm font-medium">Vehículo</label>
-            <input
-              type="text"
-              id="vehicle"
-              v-model="form.vehicle"
-              class="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-primary"
-              required
-            />
-          </div>
-          <div class="mb-4">
-            <label for="plate" class="block text-sm font-medium">Placa</label>
-            <input
-              type="text"
-              id="plate"
-              v-model="form.plate"
-              class="w-full border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-primary"
-              required
-            />
-          </div>
-        </template>
-  
-        <button
-          type="submit"
-          class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition duration-200"
-        >
-          Registrar
-        </button>
-      </form>
-      <p v-if="registerError" class="text-red-500 mt-4 text-center">{{ registerError }}</p>
-    </div>
-  </template>
-  
-  <script setup>
-  import { ref } from "vue";
-  
-  const form = ref({
-    username: "",
-    password: "",
-    role: "cliente",
-    address: "",
-    vehicle: "",
-    plate: "",
-  });
-  
-  const registerError = ref("");
-  
-  const handleRegister = async () => {
-    registerError.value = "";
-    try {
-      const response = await $fetch("/auth/register", {
-        method: "POST",
+<script setup>
+import { ref } from 'vue';
+
+const form = ref({
+  username: '',
+  password: '',
+  role: 'CLIENT',
+  name: '',
+  rut: '',
+  email: '',
+  phone: '',
+  address: '',
+  vehicle: '',
+  plate: '',
+});
+const registerError = ref('');
+
+const handleRegister = async () => {
+  registerError.value = "";
+  try {
+    console.log("Datos enviados al backend:", form.value); // Log para revisar los datos enviados
+
+    const response = await $fetch('/auth/register', {
+        baseURL: useRuntimeConfig().public.apiBase, // Asegúrate de que apiBase esté configurado correctamente
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
         body: form.value,
-      });
-  
-      if (!response.ok) {
-        throw new Error("Error al registrar el usuario");
-      }
-  
-      alert("Usuario registrado exitosamente");
-    } catch (error) {
-      registerError.value = error.message || "Error al registrar";
+        });
+
+    console.log("Respuesta del backend:", response); // Log para revisar la respuesta
+
+    if (!response || !response.success) {
+      throw new Error(response?.message || "Error al registrar el usuario");
     }
-  };
-  
-  const updateFields = () => {
-    form.value.address = "";
-    form.value.vehicle = "";
-    form.value.plate = "";
-  };
-  </script>
-  
-  <style scoped>
-  .register {
-    margin-top: 2rem;
+
+    alert("Usuario registrado exitosamente");
+  } catch (error) {
+    // Verifica si el error tiene detalles adicionales
+    if (error.data) {
+      console.error("Detalles del error del backend:", error.data);
+    }
+
+    console.error("Error en el registro:", error); // Log para depurar errores
+    registerError.value = error.message || "Error desconocido al registrar";
   }
-  </style>
+};
+
+const updateFields = () => {
+  if (form.value.role === 'DEALER') {
+    form.value.address = '';
+  } else {
+    form.value.vehicle = '';
+    form.value.plate = '';
+  }
+};
+</script>
+
+<template>
+  <div class="register max-w-md mx-auto bg-white p-8 shadow-md rounded">
+    <h1 class="text-2xl font-bold mb-4 text-center">Registro</h1>
+    <form @submit.prevent="handleRegister">
+      <!-- Username -->
+      <div class="mb-4">
+        <label for="username" class="block text-sm font-medium">Usuario</label>
+        <input
+          id="username"
+          v-model="form.username"
+          type="text"
+          class="w-full border px-3 py-2 rounded"
+          required
+        />
+      </div>
+      <!-- Password -->
+      <div class="mb-4">
+        <label for="password" class="block text-sm font-medium">Contraseña</label>
+        <input
+          id="password"
+          v-model="form.password"
+          type="password"
+          class="w-full border px-3 py-2 rounded"
+          required
+        />
+      </div>
+      <!-- Role -->
+      <div class="mb-4">
+        <label for="role" class="block text-sm font-medium">Rol</label>
+        <select
+          id="role"
+          v-model="form.role"
+          class="w-full border px-3 py-2 rounded"
+          @change="updateFields"
+        >
+          <option value="CLIENT">Cliente</option>
+          <option value="DEALER">Distribuidor</option>
+          <option value="ADMIN">Administrador</option>
+        </select>
+      </div>
+      <!-- Additional fields based on role -->
+      <div v-if="form.role === 'CLIENT'" class="mb-4">
+        <label for="name" class="block text-sm font-medium">Nombre</label>
+        <input
+          id="name"
+          v-model="form.name"
+          type="text"
+          class="w-full border px-3 py-2 rounded"
+          required
+        />
+        <label for="rut" class="block text-sm font-medium">Rut</label>    
+        <input
+          id="rut"
+          v-model="form.rut"
+          type="text"
+          class="w-full border px-3 py-2 rounded"
+          required
+        />
+        <label for="email" class="block text-sm font-medium">Correo Electronico</label>
+        
+        <input
+          id="email"
+          v-model="form.email"
+          type="email"
+          class="w-full border px-3 py-2 rounded"
+          required
+        />
+        
+        <label for="phone" class="block text-sm font-medium">Teléfono</label>
+        <input
+          id="phone"
+          v-model="form.phone"
+          type="text"
+          class="w-full border px-3 py-2 rounded"
+          required
+        />
+        <label for="address" class="block text-sm font-medium">Dirección</label>
+        <input
+          id="address"
+          v-model="form.address"
+          type="text"
+          class="w-full border px-3 py-2 rounded"
+          required
+        />
+      </div>
+      <div v-if="form.role === 'DEALER'" class="mb-4">
+        <label for="name" class="block text-sm font-medium">Nombre</label>
+        <input
+          id="name"
+          v-model="form.name"
+          type="text"
+          class="w-full border px-3 py-2 rounded"
+          required
+        />
+        <label for="rut" class="block text-sm font-medium">Rut</label>
+        <input
+          id="rut"
+          v-model="form.rut"
+          type="text"
+          class="w-full border px-3 py-2 rounded"
+          required
+        />
+        <label for="email" class="block text-sm font-medium">Correo Electronico</label>
+        <input
+          id="email"
+          v-model="form.email"
+          type="email"
+          class="w-full border px-3 py-2 rounded"
+          required
+        />
+        <label for="phone" class="block text-sm font-medium">Teléfono</label>
+        <input
+          id="phone"
+          v-model="form.phone"
+          type="text"
+          class="w-full border px-3 py-2 rounded"
+          required
+        />
+        <label for="vehicle" class="block text-sm font-medium">Vehículo</label>
+        <input
+          id="vehicle"
+          v-model="form.vehicle"
+          type="text"
+          class="w-full border px-3 py-2 rounded"
+          required
+        />
+      </div>
+      <div v-if="form.role === 'DEALER'" class="mb-4">
+        <label for="plate" class="block text-sm font-medium">Placa</label>
+        <input
+          id="plate"
+          v-model="form.plate"
+          type="text"
+          class="w-full border px-3 py-2 rounded"
+          required
+        />
+      </div>
+      <button type="submit" class="w-full bg-green-500 text-white py-2 rounded">
+        Registrar
+      </button>
+    </form>
+    <p v-if="registerError" class="text-red-500 mt-4 text-center">{{ registerError }}</p>
+  </div>
+</template>

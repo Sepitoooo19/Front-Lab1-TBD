@@ -1,51 +1,58 @@
 <script setup>
-import { useRouter } from 'vue-router';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useRuntimeConfig } from '#app'; // Importa useRuntimeConfig
 
 const router = useRouter();
-const username = ref("");
-const password = ref("");
-const role = ref("cliente"); // Rol por defecto
-const loginError = ref("");
+const username = ref('');
+const password = ref('');
+const loginError = ref('');
 
 const handleLogin = async () => {
-  loginError.value = ""; // Limpiar errores previos
-
+  loginError.value = '';
   try {
-    const response = await fetch("http://localhost:8080/auth/login", {
-      method: "POST",
+    const config = useRuntimeConfig();
+    console.log('Datos enviados al backend para login:', { username: username.value, password: password.value });
+
+    const response = await $fetch('/auth/login', {
+      baseURL: config.public.apiBase,
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
+      body: {
         username: username.value,
         password: password.value,
-        role: role.value, // Enviar el rol seleccionado
-      }),
+      },
     });
 
-    if (!response.ok) {
-      throw new Error("Credenciales inválidas o rol no autorizado");
-    }
+    console.log('Respuesta del backend:', response);
 
-    const data = await response.json();
-    const token = data.token;
+    // Verifica si el token está presente en la respuesta
+    if (response && response.token) {
+      // Guarda el token en localStorage
+      localStorage.setItem('authToken', response.token);
 
-    // Almacenar el token en localStorage
-    localStorage.setItem("jwt", token);
-
-    // Redirigir según el rol seleccionado
-    if (role.value === "cliente") {
-      router.push("/home-client");
-    } else if (role.value === "repartidor") {
-      router.push("/home-repartidor");
-    } else if (role.value === "administrador") {
-      router.push("/home-admin");
+      // Redirige según el rol del usuario
+      switch (response.role) {
+        case 'CLIENT':
+          router.push('/home-client');
+          break;
+        case 'DEALER':
+          router.push('/home-dealer');
+          break;
+        case 'ADMIN':
+          router.push('/home-admin');
+          break;
+        default:
+          throw new Error('Rol desconocido');
+      }
     } else {
-      throw new Error("Rol desconocido");
+      throw new Error(response?.message || 'Error al iniciar sesión');
     }
   } catch (error) {
-    loginError.value = error.message || "Error al iniciar sesión";
+    console.error('Error en el inicio de sesión:', error);
+    loginError.value = error.message || 'Error desconocido al iniciar sesión';
   }
 };
 </script>
@@ -57,9 +64,9 @@ const handleLogin = async () => {
       <div class="mb-4">
         <label for="username" class="block text-sm font-medium">Usuario</label>
         <input
-          type="text"
           id="username"
           v-model="username"
+          type="text"
           class="w-full border px-3 py-2 rounded"
           required
         />
@@ -67,24 +74,12 @@ const handleLogin = async () => {
       <div class="mb-4">
         <label for="password" class="block text-sm font-medium">Contraseña</label>
         <input
-          type="password"
           id="password"
           v-model="password"
+          type="password"
           class="w-full border px-3 py-2 rounded"
           required
         />
-      </div>
-      <div class="mb-4">
-        <label for="role" class="block text-sm font-medium">Rol</label>
-        <select
-          id="role"
-          v-model="role"
-          class="w-full border px-3 py-2 rounded"
-        >
-          <option value="cliente">Cliente</option>
-          <option value="repartidor">Repartidor</option>
-          <option value="administrador">Administrador</option>
-        </select>
       </div>
       <button type="submit" class="w-full bg-blue-500 text-white py-2 rounded">
         Iniciar Sesión
@@ -93,9 +88,3 @@ const handleLogin = async () => {
     <p v-if="loginError" class="text-red-500 mt-4 text-center">{{ loginError }}</p>
   </div>
 </template>
-
-<style scoped>
-.login {
-  margin-top: 2rem;
-}
-</style>

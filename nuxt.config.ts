@@ -4,12 +4,11 @@ export default defineNuxtConfig({
   css: ['~/assets/css/main.css'],
   runtimeConfig: {
     public: {
-      apiBase: process.env.API_BASE_URL || "http://localhost:8090", // asumiendo que tu backend corre ahí
-     } as {
-      apiBase: string;
-    }
+      apiBase: 'http://localhost:8090', // Cambia esto según la URL de tu backend
+    },
   },
-  compatibilityDate: '2024-11-01',
+
+  compatibilityDate: '2025-05-01',
   devtools: { enabled: true },
   postcss: {
     plugins: {

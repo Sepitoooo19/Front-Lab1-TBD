@@ -20,7 +20,29 @@
         </div>
       </footer>
     </div>
+    <div>
+    <nav class="bg-gray-800 text-white p-4 flex justify-between">
+      <div>
+        <NuxtLink to="/home-client" class="mr-4">Inicio</NuxtLink>
+        <NuxtLink to="/profile" class="mr-4">Perfil</NuxtLink>
+      </div>
+      <button @click="handleLogout" class="bg-red-500 px-4 py-2 rounded">
+        Cerrar Sesión
+      </button>
+    </nav>
+    <NuxtPage />
+  </div>
   </template>
+  <script setup>
+  import { useRouter } from 'vue-router';
+  
+  const router = useRouter();
+  
+  const handleLogout = () => {
+    localStorage.removeItem('authToken'); // Elimina el token
+    router.push('/login'); // Redirige al login
+  };
+  </script>
   
   <style scoped>
   /* Asegurar diseño horizontal para el header */
