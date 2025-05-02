@@ -1,34 +1,31 @@
-export default {
-    layout: 'admin'
-}
-
 <template>
     <div>
-      <header class="bg-red-600 text-white p-4">
-        <nav class="flex justify-between items-center">
-          <h1 class="text-xl font-bold">Administrador - Sistema de Delivery</h1>
+      <header class="bg-red-600 text-white py-4 w-full">
+        <div class="flex justify-between items-center px-4">
+          <h1 class="text-2xl font-bold">Administrador - Sistema de Delivery</h1>
           <ul class="flex space-x-4">
             <li><a href="/home-admin" class="hover:underline">Inicio</a></li>
             <li><a href="/clients" class="hover:underline">Clientes</a></li>
             <li><a href="/products" class="hover:underline">Productos</a></li>
             <li><a href="/orders" class="hover:underline">Pedidos</a></li>
             <li><a href="/repartidores" class="hover:underline">Repartidores</a></li>
+            <li><a href="/logout" class="hover:underline">Cerrar Sesión</a></li>
           </ul>
-        </nav>
+        </div>
       </header>
-      <main class="p-6">
-        <h2 class="text-2xl font-bold mb-4">Gestión del Sistema</h2>
-        <p>Desde aquí puedes administrar clientes, productos, pedidos y repartidores.</p>
-        <!-- Contenido adicional para administración -->
+      <main class="container mx-auto py-8">
+        <NuxtPage />
       </main>
+      <footer class="bg-gray-800 text-white py-4">
+        <div class="container mx-auto text-center">
+          <p>© 2025 Sistema de Delivery</p>
+        </div>
+      </footer>
     </div>
   </template>
   
-  <script setup>
-  </script>
-  
   <style scoped>
   header {
-    background-color: #dc3545;
+    width: 100%;
   }
   </style>

@@ -1,13 +1,10 @@
 <template>
-    <div>
-      <header class="bg-gray-800 text-white py-4">
-        <div class="container mx-auto">
-          <h1>Sistema de Gestión de Pedidos</h1>
-        </div>
-      </header>
-      <main class="container mx-auto py-8">
+    <div class="flex flex-col min-h-screen">
+      <!-- Contenido principal -->
+      <main class="flex-grow container mx-auto py-8">
         <NuxtPage />
       </main>
+      <!-- Footer siempre al fondo -->
       <footer class="bg-gray-800 text-white py-4">
         <div class="container mx-auto text-center">
           <p>© 2025 Sistema de Delivery</p>
@@ -15,3 +12,14 @@
       </footer>
     </div>
   </template>
+  
+  <style scoped>
+  .flex {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .flex-grow {
+    flex-grow: 1;
+  }
+  </style>

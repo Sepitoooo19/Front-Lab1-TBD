@@ -1,3 +1,7 @@
+export default {
+    layout: 'repartidor'
+}
+
 <template>
     <div>
       <header class="bg-green-600 text-white p-4">

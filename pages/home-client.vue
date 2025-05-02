@@ -1,3 +1,7 @@
+export default {
+    layout: 'client'
+}
+
 <template>
     <div>
       <header class="bg-blue-600 text-white p-4">
