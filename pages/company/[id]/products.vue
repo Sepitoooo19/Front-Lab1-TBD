@@ -36,4 +36,8 @@ const products = ref([]);
 onMounted(async () => {
   products.value = await getProductsByCompanyId(companyId);
 });
+
+ definePageMeta({
+    layout: 'admin', // Usa el layout de administrador
+  });
 </script>

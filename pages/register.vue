@@ -1,5 +1,8 @@
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const form = ref({
   username: '',
@@ -36,6 +39,9 @@ const handleRegister = async () => {
     }
 
     alert("Usuario registrado exitosamente");
+
+    // Redirige a la página de login después del registro
+    router.push('/login');
   } catch (error) {
     // Verifica si el error tiene detalles adicionales
     if (error.data) {
@@ -54,6 +60,10 @@ const updateFields = () => {
     form.value.vehicle = '';
     form.value.plate = '';
   }
+};
+
+const goToLogin = () => {
+  router.push('/login');
 };
 </script>
 
@@ -115,8 +125,7 @@ const updateFields = () => {
           class="w-full border px-3 py-2 rounded"
           required
         />
-        <label for="email" class="block text-sm font-medium">Correo Electronico</label>
-        
+        <label for="email" class="block text-sm font-medium">Correo Electrónico</label>
         <input
           id="email"
           v-model="form.email"
@@ -124,7 +133,6 @@ const updateFields = () => {
           class="w-full border px-3 py-2 rounded"
           required
         />
-        
         <label for="phone" class="block text-sm font-medium">Teléfono</label>
         <input
           id="phone"
@@ -159,7 +167,7 @@ const updateFields = () => {
           class="w-full border px-3 py-2 rounded"
           required
         />
-        <label for="email" class="block text-sm font-medium">Correo Electronico</label>
+        <label for="email" class="block text-sm font-medium">Correo Electrónico</label>
         <input
           id="email"
           v-model="form.email"
@@ -199,5 +207,10 @@ const updateFields = () => {
       </button>
     </form>
     <p v-if="registerError" class="text-red-500 mt-4 text-center">{{ registerError }}</p>
+    <div class="mt-4 text-center">
+      <button @click="goToLogin" class="w-full bg-blue-500 text-white py-2 rounded">
+        Iniciar Sesión
+      </button>
+    </div>
   </div>
 </template>

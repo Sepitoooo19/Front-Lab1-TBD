@@ -55,6 +55,10 @@ const handleLogin = async () => {
     loginError.value = error.message || 'Error desconocido al iniciar sesión';
   }
 };
+
+const goToRegister = () => {
+  router.push('/register');
+};
 </script>
 
 <template>
@@ -85,6 +89,12 @@ const handleLogin = async () => {
         Iniciar Sesión
       </button>
     </form>
+    <button
+      @click="goToRegister"
+      class="w-full bg-gray-500 text-white py-2 mt-4 rounded"
+    >
+      Registrarse
+    </button>
     <p v-if="loginError" class="text-red-500 mt-4 text-center">{{ loginError }}</p>
   </div>
 </template>

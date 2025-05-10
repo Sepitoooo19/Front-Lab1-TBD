@@ -15,6 +15,8 @@ export interface Order {
   deliveryDate: string
   status: string
   products: number
+  clientId: Client
+  dealerId: Dealer
   totalPrice: number
 }
 

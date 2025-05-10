@@ -6,8 +6,7 @@
           <ul class="flex space-x-4">
               <li><a href="/home-admin" class="hover:underline">Inicio</a></li>
               <li><a href="/clients" class="hover:underline">Clientes</a></li>
-              <li><a href="/products" class="hover:underline">Productos</a></li>
-              <li><a href="/orders" class="hover:underline">Pedidos</a></li>
+              <li><a href="/orders" class="hover:underline">Todas las órdenes</a></li>
               <li><a href="/dealers" class="hover:underline">Repartidores</a></li>
               <li><a href="/unassigned-orders" class="hover:underline">Órdenes no asignadas</a></li>
               <li><a href="/companies-admin" class="hover:underline">Empresas</a></li>

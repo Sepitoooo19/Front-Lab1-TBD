@@ -25,6 +25,10 @@
           <td class="px-4 py-2 space-x-2">
             <button @click="viewDeliveries(company.id)" class="bg-blue-500 text-white px-3 py-1 rounded">Entregas</button>
             <button @click="viewFailedDeliveries(company.id)" class="bg-red-500 text-white px-3 py-1 rounded">Fallidas</button>
+            <button @click="viewCompletedDeliveries(company.id)" class="bg-blue-500 text-white px-3 py-1 rounded">Entregas</button>
+            <button @click="viewFailedDeliveries(company.id)" class="bg-red-500 text-white px-3 py-1 rounded">
+              Fallidas
+            </button>
             <button @click="viewProducts(company.id)" class="bg-green-500 text-white px-3 py-1 rounded">Productos</button>
           </td>
         </tr>
@@ -36,6 +40,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { getAllCompanies } from '~/services/companyService'; // Importa la función del servicio
+import { useRouter } from 'vue-router';
 
 // Variable para almacenar la lista de empresas
 const companies = ref([]);
@@ -50,15 +55,25 @@ onMounted(async () => {
 });
 
 // Funciones para manejar las acciones de los botones
+/*
 const viewDeliveries = (companyId) => {
-  window.location.href = `/companies/${companyId}/deliveries`;
+  window.location.href = `/orders/company/${companyId}`; // Cambia la ruta según tu estructura
+  window.location.href = `/company/${companyId}/completed-deliveries`; // Cambia la ruta según tu estructura
+};
+*/
+const viewCompletedDeliveries = (companyId) => {
+  window.location.href = `/company/${companyId}/completed-deliveries`; // Cambia la ruta según tu estructura
 };
 
 const viewFailedDeliveries = (companyId) => {
-  window.location.href = `/companies/${companyId}/failed-deliveries`;
+  window.location.href = `/company/${companyId}/failed-deliveries`; // Cambia la ruta para que coincida con la estructura dinámica
 };
 
 const viewProducts = (companyId) => {
   window.location.href = `/companies/${companyId}/products`;
 };
+
+ definePageMeta({
+    layout: 'admin', // Usa el layout de administrador
+  });
 </script>
