@@ -23,8 +23,6 @@
           <td class="px-4 py-2">{{ company.failedDeliveries }}</td>
           <td class="px-4 py-2">{{ company.totalSales }}</td>
           <td class="px-4 py-2 space-x-2">
-            <button @click="viewDeliveries(company.id)" class="bg-blue-500 text-white px-3 py-1 rounded">Entregas</button>
-            <button @click="viewFailedDeliveries(company.id)" class="bg-red-500 text-white px-3 py-1 rounded">Fallidas</button>
             <button @click="viewCompletedDeliveries(company.id)" class="bg-blue-500 text-white px-3 py-1 rounded">Entregas</button>
             <button @click="viewFailedDeliveries(company.id)" class="bg-red-500 text-white px-3 py-1 rounded">
               Fallidas

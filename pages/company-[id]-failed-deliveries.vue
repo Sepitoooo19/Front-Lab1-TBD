@@ -53,8 +53,4 @@ onMounted(async () => {
     error.value = 'No se pudieron cargar las entregas fallidas.';
   }
 });
-
- definePageMeta({
-    layout: 'admin', // Usa el layout de administrador
-  });
 </script>
