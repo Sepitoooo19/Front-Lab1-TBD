@@ -31,14 +31,19 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { getDeliveriesByCompanyId } from '~/services/companyService';
+import { getDeliveredOrdersByCompanyId } from '~/services/orderService'; // Cambia el servicio para obtener órdenes entregadas
 
 const route = useRoute();
-const companyId = route.params.id;
+const companyId = route.params.companyId; // Asegúrate de que el parámetro sea "companyId"
 const company = ref({});
 const deliveries = ref([]);
 
+// Obtén las órdenes entregadas al montar el componente
 onMounted(async () => {
-  deliveries.value = await getDeliveriesByCompanyId(companyId);
+  try {
+    deliveries.value = await getDeliveredOrdersByCompanyId(companyId);
+  } catch (error) {
+    console.error('Error al obtener las entregas:', error);
+  }
 });
 </script>

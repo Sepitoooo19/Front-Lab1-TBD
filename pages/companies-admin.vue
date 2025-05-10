@@ -51,11 +51,11 @@ onMounted(async () => {
 
 // Funciones para manejar las acciones de los botones
 const viewDeliveries = (companyId) => {
-  window.location.href = `/companies/${companyId}/deliveries`;
+  window.location.href = `/orders/company/${companyId}`; // Cambia la ruta según tu estructura
 };
 
 const viewFailedDeliveries = (companyId) => {
-  window.location.href = `/companies/${companyId}/failed-deliveries`;
+  window.location.href = `/company/${companyId}/failed-deliveries`;
 };
 
 const viewProducts = (companyId) => {
