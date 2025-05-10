@@ -10,6 +10,6 @@
   
   <script setup>
   definePageMeta({
-    layout: 'repartidor', // Usa el layout de repartidor
+    layout: 'dealer', // Usa el layout de repartidor
   });
   </script>

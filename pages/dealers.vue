@@ -38,6 +38,10 @@ const deleteDealer = async (dealerId: number) => {
 const viewOrders = (dealerId: number) => {
   router.push(`/dealers/${dealerId}/orders`); // Ruta para ver órdenes
 };
+
+definePageMeta({
+    layout: 'dealer', // Usa el layout de repartidor
+  });
 </script>
 
 <template>

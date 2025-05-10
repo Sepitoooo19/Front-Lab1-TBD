@@ -4,8 +4,10 @@
         <div class="flex justify-between items-center px-4">
           <h1 class="text-2xl font-bold">Repartidor - Sistema de Delivery</h1>
           <ul class="flex space-x-4">
-            <li><a href="/home-repartidor" class="hover:underline">Inicio</a></li>
-            <li><a href="/assign-orders" class="hover:underline">Órdenes Asignadas</a></li>
+            <li><a href="/home-dealer" class="hover:underline">Inicio</a></li>
+            <li><a href="/profile-dealer" class="hover:underline">Perfil</a></li>
+            <li><a href="/unassigned-orders-dealer" class="hover:underline">Órdenes sin asignar</a></li>
+            <li><a href="/emergencies-dealer" class="hover:underline">Emergencias</a></li>
             <li><a href="/login" class="hover:underline">Cerrar Sesión</a></li>
           </ul>
         </div>

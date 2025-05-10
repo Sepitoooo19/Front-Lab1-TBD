@@ -53,6 +53,10 @@ const closeOrdersModal = () => {
   isOrdersModalOpen.value = false; // Cierra el modal
   orders.value = []; // Limpia las órdenes
 };
+
+ definePageMeta({
+    layout: 'admin', // Usa el layout de administrador
+  });
 </script>
 
 <template>
