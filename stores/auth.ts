@@ -1,20 +1,16 @@
-import { defineStore } from "pinia";
+import { defineStore } from 'pinia';
 
-export const useAuthStore = defineStore("auth", {
+export const useUserStore = defineStore('user', {
   state: () => ({
-    token: localStorage.getItem("jwt") || null,
+    role: '', // Puede ser 'CLIENT', 'ADMIN', 'DEALER'
+    token: '', // Token de autenticación
   }),
   actions: {
+    setRole(role: string) {
+      this.role = role;
+    },
     setToken(token: string) {
       this.token = token;
-      localStorage.setItem("jwt", token);
     },
-    clearToken() {
-      this.token = null;
-      localStorage.removeItem("jwt");
-    },
-  },
-  getters: {
-    isAuthenticated: state => !!state.token,
   },
 });

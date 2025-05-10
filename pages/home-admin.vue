@@ -10,6 +10,7 @@
   
   <script setup>
   definePageMeta({
-    layout: 'admin', // Usa el layout de administrador
+    layout: 'admin',
+    middleware: 'auth-role'
   });
   </script>

@@ -10,6 +10,7 @@
   
   <script setup>
   definePageMeta({
-    layout: 'dealer', // Usa el layout de repartidor
+    layout: 'dealer',
+    middleware: 'auth-role' // Usa el layout de repartidor
   });
   </script>

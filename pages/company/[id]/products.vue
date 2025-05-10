@@ -1,6 +1,14 @@
 <template>
   <div>
-    <h1 class="text-2xl font-bold mb-4">Productos - Empresa {{ company.name }}</h1>
+    <!-- Título dinámico basado en el nombre de la empresa -->
+    <h1 v-if="company.name" class="text-2xl font-bold mb-4">
+      Productos - Empresa {{ company.name }}
+    </h1>
+    <h1 v-else class="text-2xl font-bold mb-4">
+      Cargando datos de la empresa...
+    </h1>
+
+    <!-- Tabla de productos -->
     <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow">
       <thead class="bg-gray-100">
         <tr>
@@ -27,17 +35,28 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { getProductsByCompanyId } from '~/services/companyService';
+import { getProductsByCompanyId } from '~/services/productService'; // Servicio para obtener productos
+import { getCompanyById } from '~/services/companyService'; // Servicio para obtener la empresa
 
 const route = useRoute();
-const companyId = route.params.id;
-const products = ref([]);
+const companyId = route.params.id; // Obtén el ID de la empresa desde la URL
+const products = ref([]); // Lista de productos
+const company = ref({}); // Datos de la empresa
 
 onMounted(async () => {
-  products.value = await getProductsByCompanyId(companyId);
+  try {
+    // Carga los productos de la empresa
+    products.value = await getProductsByCompanyId(companyId);
+
+    // Carga los datos de la empresa
+    company.value = await getCompanyById(companyId);
+    console.log('Datos de la empresa cargados:', company.value); // Verifica los datos en la consola
+  } catch (err) {
+    console.error('Error al cargar los datos:', err);
+  }
 });
 
- definePageMeta({
-    layout: 'admin', // Usa el layout de administrador
-  });
+definePageMeta({
+  layout: 'admin', // Usa el layout de administrador
+});
 </script>

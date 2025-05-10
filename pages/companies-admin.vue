@@ -23,6 +23,7 @@
           <td class="px-4 py-2">{{ company.failedDeliveries }}</td>
           <td class="px-4 py-2">{{ company.totalSales }}</td>
           <td class="px-4 py-2 space-x-2">
+            <button @click="viewAllDeliveries(company.id)" class="bg-gray-500 text-white px-3 py-1 rounded">Ver Entregas</button>
             <button @click="viewCompletedDeliveries(company.id)" class="bg-blue-500 text-white px-3 py-1 rounded">Entregas</button>
             <button @click="viewFailedDeliveries(company.id)" class="bg-red-500 text-white px-3 py-1 rounded">
               Fallidas
@@ -38,6 +39,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { getAllCompanies } from '~/services/companyService'; // Importa la función del servicio
+import { getProductsByCompanyId } from '~/services/productService';
 import { useRouter } from 'vue-router';
 
 // Variable para almacenar la lista de empresas
@@ -51,6 +53,9 @@ onMounted(async () => {
     console.error('Error al obtener la lista de empresas:', error);
   }
 });
+
+
+
 
 // Funciones para manejar las acciones de los botones
 /*
@@ -67,9 +72,14 @@ const viewFailedDeliveries = (companyId) => {
   window.location.href = `/company/${companyId}/failed-deliveries`; // Cambia la ruta para que coincida con la estructura dinámica
 };
 
-const viewProducts = (companyId) => {
-  window.location.href = `/companies/${companyId}/products`;
+const viewAllDeliveries = (companyId) => {
+  window.location.href = `/company/${companyId}/deliveries`; // Cambia la ruta para que coincida con la estructura dinámica
 };
+
+const viewProducts = (companyId) => {
+  window.location.href = `/company/${companyId}/products`;
+};
+
 
  definePageMeta({
     layout: 'admin', // Usa el layout de administrador

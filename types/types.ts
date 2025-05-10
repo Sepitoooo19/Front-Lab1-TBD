@@ -37,3 +37,12 @@ export interface Company {
   email: string
  
 }
+
+export type Product = {
+  id: number;
+  name: string;
+  stock: number;
+  price: number;
+  category: string;
+  companyId: number;
+};

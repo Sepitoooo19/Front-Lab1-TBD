@@ -1,64 +1,42 @@
 <script setup>
-import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useRuntimeConfig } from '#app'; // Importa useRuntimeConfig
+import axios from 'axios';
 
 const router = useRouter();
 const username = ref('');
 const password = ref('');
-const loginError = ref('');
 
 const handleLogin = async () => {
-  loginError.value = '';
   try {
-    const config = useRuntimeConfig();
-    console.log('Datos enviados al backend para login:', { username: username.value, password: password.value });
-
-    const response = await $fetch('/auth/login', {
-      baseURL: config.public.apiBase,
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: {
-        username: username.value,
-        password: password.value,
-      },
+    const response = await axios.post('http://localhost:8090/auth/login', {
+      username: username.value,
+      password: password.value,
     });
 
-    console.log('Respuesta del backend:', response);
+    const { token, role } = response.data;
 
-    // Verifica si el token está presente en la respuesta
-    if (response && response.token) {
-      // Guarda el token en localStorage
-      localStorage.setItem('authToken', response.token);
+    // Guarda el token y el rol en el localStorage
+    localStorage.setItem('token', token);
+    localStorage.setItem('role', role); // Agrega esta línea
 
-      // Redirige según el rol del usuario
-      switch (response.role) {
-        case 'CLIENT':
-          router.push('/home-client');
-          break;
-        case 'DEALER':
-          router.push('/home-dealer');
-          break;
-        case 'ADMIN':
-          router.push('/home-admin');
-          break;
-        default:
-          throw new Error('Rol desconocido, por favor asignar un rol correcto');
-      }
-    } else {
-      throw new Error(response?.message || 'Error al iniciar sesión');
+    // Redirige al usuario según su rol
+    if (role === 'ADMIN') {
+      router.push('/home-admin');
+    } else if (role === 'CLIENT') {
+      router.push('/home-client');
+    } else if (role === 'DEALER') {
+      router.push('/home-dealer');
     }
   } catch (error) {
-    console.error('Error en el inicio de sesión:', error);
-    loginError.value = error.message || 'Error desconocido al iniciar sesión';
+    console.error('Error al iniciar sesión:', error);
+    alert('Credenciales incorrectas');
   }
 };
 
 const goToRegister = () => {
   router.push('/register');
 };
+
 </script>
 
 <template>

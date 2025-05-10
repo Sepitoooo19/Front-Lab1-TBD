@@ -1,4 +1,4 @@
-
+import axios from 'axios';
 const config = useRuntimeConfig();
 
 export const login = async (email: string, password: string) => {
@@ -24,4 +24,20 @@ export const register = async (user: any) => {
   });
   if (!response.ok) throw new Error("Error al registrar el usuario");
   return await response.json();
+};
+
+export const logout = async () => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    try {
+      // Opcional: Notificar al backend para invalidar el token
+      await axios.post('/auth/logout', {}, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+    } catch (error) {
+      console.error('Error al cerrar sesión en el backend:', error);
+    }
+  }
+  // Eliminar el token del localStorage
+  localStorage.removeItem('token');
 };

@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { getAllClients, deleteClientById } from '~/services/clientService';
-import { getOrdersByClientId } from '~/services/ordersService';
+import { getOrdersByClient } from '~/services/ordersService';
 import type { Client, Order } from '~/types/types';
 
 const router = useRouter();
@@ -41,7 +41,7 @@ const deleteClient = async (clientId: number) => {
 
 const viewOrders = async (clientId: number, clientName: string) => {
   try {
-    orders.value = await getOrdersByClientId(clientId); // Obtiene las órdenes del cliente
+    orders.value = await getOrdersByClient(); // Obtiene las órdenes del cliente
     selectedClientName.value = clientName; // Guarda el nombre del cliente seleccionado
     isOrdersModalOpen.value = true; // Abre el modal
   } catch (error) {

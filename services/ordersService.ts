@@ -1,4 +1,5 @@
 
+import type { Product } from '~/types/types';
 
 
 const config = useRuntimeConfig();
@@ -63,14 +64,28 @@ export const deleteClientById = async (id: number) => {
     return true;
   };
 
-export const getOrdersByClientId = async (clientId: number) => {
-    const response = await fetch(`${config.public.apiBase}/orders/client/${clientId}`);
-    console.log("Petición a:", response.url)
-    if (!response.ok) throw new Error("Error al obtener las órdenes del cliente");
-    const data = await response.json();
-    console.log("Órdenes recibidas:", data);
-    return data;
-  };
+export const getOrdersByClient = async () => {
+  const token = localStorage.getItem('token'); // Obtén el token del localStorage
+
+  if (!token) {
+    throw new Error('No se encontró el token de autenticación');
+  }
+
+  const response = await fetch(`http://localhost:8090/orders/client/orders`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`, // Incluye el token en el encabezado
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Error al obtener las órdenes del cliente');
+  }
+
+  return await response.json();
+};
+
 
 export const getOrdersByDealerId = async (dealerId: number) => {
   const response = await fetch(`${config.public.apiBase}/orders/dealer/${dealerId}`);
@@ -81,11 +96,19 @@ export const getOrdersByDealerId = async (dealerId: number) => {
   return data;
 };
 
+export const getOrdersByCompanyId = async (companyId: number) => {
+    const response = await fetch(`${config.public.apiBase}/orders/company/${companyId}`);
+    if (!response.ok) throw new Error("Error al obtener las órdenes de la compañía");
+    return await response.json();
+  }
+
 export const getDeliveredOrdersByCompanyId = async (companyId: number) => {
     const response = await fetch(`${config.public.apiBase}/orders/delivered/company/${companyId}`);
     if (!response.ok) throw new Error("Error al obtener las órdenes de la compañía");
     return await response.json();
   }
+
+
 
 export const getFailedDeliveriesByCompanyId = async (companyId: number) => {
   const config = useRuntimeConfig();
@@ -96,3 +119,22 @@ export const getFailedDeliveriesByCompanyId = async (companyId: number) => {
   return await response.json();
 };
   
+
+export const getProductsByOrderId = async (orderId: number): Promise<Product[]> => {
+  const config = useRuntimeConfig();
+  const token = localStorage.getItem('authToken'); // Obtén el token de localStorage
+
+  const response = await fetch(`${config.public.apiBase}/orders/${orderId}/products`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`, // Incluye el token en el encabezado
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Error al obtener los productos del pedido');
+  }
+
+  return await response.json();
+};
