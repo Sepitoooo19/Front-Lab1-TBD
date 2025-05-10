@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="text-2xl font-bold mb-4">Entregas Fallidas - Empresa {{ companyId }}</h1>
+    <h1 class="text-2xl font-bold mb-4">Entregas Completadas - Empresa {{ companyId }}</h1>
     <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow">
       <thead class="bg-gray-100">
         <tr>
@@ -37,7 +37,7 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { getFailedDeliveriesByCompanyId } from '~/services/ordersService'; // Importa el servicio para obtener las entregas fallidas
+import { getDeliveredOrdersByCompanyId } from '~/services/ordersService'; // Importa el servicio para obtener las entregas fallidas
 
 const route = useRoute();
 const companyId = route.params.id; // Obtiene el parámetro de la ruta
@@ -47,9 +47,9 @@ const error = ref(null); // Manejo de errores
 // Obtén las entregas fallidas al montar el componente
 onMounted(async () => {
   try {
-    failedOrders.value = await getFailedDeliveriesByCompanyId(companyId);
+    failedOrders.value = await getDeliveredOrdersByCompanyId(companyId);
   } catch (err) {
-    console.error('Error al obtener las entregas fallidas:', err);
+    console.error('Error al obtener las entregas completadas:', err);
     error.value = 'No se pudieron cargar las entregas fallidas.';
   }
 });

@@ -57,7 +57,7 @@ export const getOrdersByClientId = async (clientId: number) => {
   };
 
 export const getDeliveredOrdersByCompanyId = async (companyId: number) => {
-    const response = await fetch(`${config.public.apiBase}/orders/company/${companyId}`);
+    const response = await fetch(`${config.public.apiBase}/orders/delivered/company/${companyId}`);
     if (!response.ok) throw new Error("Error al obtener las órdenes de la compañía");
     return await response.json();
   }

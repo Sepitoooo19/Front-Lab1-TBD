@@ -16,5 +16,6 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt']
+  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt'],
+  pages: true // Habilita la detección automática de rutas en la carpeta "pages"
 })
