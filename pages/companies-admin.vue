@@ -1,7 +1,8 @@
 <template>
   <div>
     <h1 class="text-2xl font-bold mb-4">Empresas</h1>
-    <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow">
+    <div v-if="error" class="text-red-500 mb-4">{{ error }}</div>
+    <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow" v-if="!error">
       <thead class="bg-gray-100">
         <tr>
           <th class="px-4 py-2 text-left">ID</th>

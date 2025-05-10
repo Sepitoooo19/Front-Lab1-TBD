@@ -27,3 +27,11 @@ export interface Dealer {
   plate: string
   vehicle: string
 }
+
+export interface Company {
+  id: number
+  name: string
+  phone: string
+  email: string
+ 
+}

@@ -1,9 +1,11 @@
 const config = useRuntimeConfig();
  
-export const getAllCompanies = async () => {
-  const response = await fetch('/companies');
+import type { Company } from '~/types/types';
+
+export const getAllCompanies = async (): Promise<Company[]> => {
+  const response = await fetch(`${useRuntimeConfig().public.apiBase}/companies`);
   if (!response.ok) {
-    throw new Error('Error al obtener las empresas');
+    throw new Error('Error al obtener las compañías');
   }
   return await response.json();
 };
