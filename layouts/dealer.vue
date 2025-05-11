@@ -6,11 +6,9 @@
         <ul class="flex space-x-4">
           <li><a href="/home-dealer" class="hover:underline">Inicio</a></li>
           <li><a href="/profile-dealer" class="hover:underline">Perfil</a></li>
+          <li><a href="/actual-order" class="hover:underline">Orden actual</a></li>
           <li><a href="/unassigned-orders-dealer" class="hover:underline">Órdenes sin asignar</a></li>
-          <li>
-            <!-- Enlace dinámico con dealerId -->
-            <a :href="`/dealer-orders-${dealerId}`" class="hover:underline">Órdenes completadas</a>
-          </li>
+          <li><a href="/dealer-orders" class="hover:underline">Mis Órdenes</a></li>
           <li><a href="/emergencies-dealer" class="hover:underline">Emergencias</a></li>
           <li><a href="/login" class="hover:underline">Cerrar Sesión</a></li>
         </ul>

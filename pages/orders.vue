@@ -49,7 +49,10 @@ definePageMeta({
       <thead class="bg-gray-100">
         <tr>
           <th class="px-4 py-2 text-left">ID</th>
+          <th class="px-4 py-2 text-left">Id Cliente</th>
           <th class="px-4 py-2 text-left">Cliente</th>
+          <th class="px-4 py-2 text-left">Id Repartidor</th>
+          <th class="px-4 py-2 text-left">Repartidor</th>
           <th class="px-4 py-2 text-left">Fecha de Orden</th>
           <th class="px-4 py-2 text-left">Fecha de Entrega</th>
           <th class="px-4 py-2 text-left">Estado</th>
@@ -59,7 +62,10 @@ definePageMeta({
       <tbody>
         <tr v-for="order in orders" :key="order.id" class="border-t hover:bg-gray-50">
           <td class="px-4 py-2">{{ order.id }}</td>
+          <td class="px-4 py-2">{{ order.clientId }}</td> <!-- ID del cliente -->
           <td class="px-4 py-2">{{ order.nameClient }}</td> <!-- Muestra el nombre del cliente -->
+          <td class="px-4 py-2">{{ order.dealerId }}</td>
+          <td class="px-4 py-2">{{ order.dealerId.name }}</td>
           <td class="px-4 py-2">{{ formatDate(order.orderDate) }}</td>
           <td class="px-4 py-2">{{ formatDate(order.deliveryDate) }}</td>
           <td class="px-4 py-2">{{ order.status }}</td>

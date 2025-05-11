@@ -222,3 +222,83 @@ export const markOrderAsUrgent = async (orderId: number): Promise<void> => {
     throw new Error('Error al marcar el pedido como URGENTE');
   }
 };
+
+export const getOrdersByDealer = async () => {
+  const token = localStorage.getItem('token'); // Obtén el token del localStorage
+
+  if (!token) {
+    throw new Error('No se encontró el token de autenticación');
+  }
+
+  const response = await fetch(`http://localhost:8090/orders/dealer/orders`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`, // Incluye el token en el encabezado
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Error al obtener las órdenes del dealer');
+  }
+
+  return await response.json();
+};
+
+export const getActiveOrderByDealer = async () => {
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    throw new Error('No se encontró el token de autenticación');
+  }
+
+  const response = await fetch(`${config.public.apiBase}/orders/dealer/active-order`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    // Si no hay orden activa (404), devolver null en lugar de lanzar error
+    if (response.status === 404) {
+      return null;
+    }
+    throw new Error('Error al obtener la orden activa del dealer');
+  }
+
+  // Verificar si la respuesta tiene contenido antes de parsear
+  const text = await response.text();
+  return text ? JSON.parse(text) : null;
+};
+
+export const updateOrderStatus = async (orderId: number, body: { status: string, deliveryDate?: null }) => {
+  const token = localStorage.getItem('token');
+  
+  if (!token) {
+    throw new Error('No se encontró el token de autenticación');
+  }
+
+  const response = await fetch(`${config.public.apiBase}/orders/${orderId}/status`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    if (response.status === 403) {
+      throw new Error('No tienes permiso para actualizar esta orden');
+    }
+    throw new Error('Error al actualizar el estado de la orden');
+  }
+
+  if (response.status === 204) {
+    return null;
+  }
+
+  return await response.json().catch(() => null);
+};

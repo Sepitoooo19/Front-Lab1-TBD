@@ -1,27 +1,33 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
-import { getOrdersByDealerId } from '~/services/ordersService';
+import { useRuntimeConfig } from '#app';
+import { getOrdersByDealer } from '~/services/ordersService';
 import type { Order } from '~/types/types';
 
-// Obtener el dealerId de la URL
-const route = useRoute();
-const dealerId = Number(route.params.dealerId);
-
+const config = useRuntimeConfig();
 const orders = ref<Order[]>([]);
 
 onMounted(async () => {
   try {
-    // Llamada al servicio para obtener las órdenes del dealer actual
-    orders.value = await getOrdersByDealerId(dealerId);
+    // Llamada al servicio que usa el token del dealer autenticado
+    orders.value = await getOrdersByDealer();
   } catch (error) {
+    console.error('Error al cargar el historial de órdenes:', error);
     alert('Error al cargar el historial de órdenes');
   }
 });
 
 definePageMeta({
-  layout: 'dealer', // Usa el layout para dealers
+  layout: 'dealer',
 });
+
+// Función para formatear la fecha de entrega
+const formatDeliveryDate = (order: Order) => {
+  if (order.status === 'Fallido') {
+    return 'No se pudo entregar';
+  }
+  return order.deliveryDate ? new Date(order.deliveryDate).toLocaleString() : 'En proceso';
+};
 </script>
 
 <template>
@@ -43,14 +49,17 @@ definePageMeta({
       <tbody>
         <tr v-for="order in orders" :key="order.id" class="hover:bg-gray-50">
           <td class="px-4 py-2">{{ order.id }}</td>
-          <td class="px-4 py-2">{{ order.orderDate }}</td>
-          <td class="px-4 py-2">{{ order.deliveryDate }}</td>
+          <td class="px-4 py-2">{{ new Date(order.orderDate).toLocaleString() }}</td>
+          <td class="px-4 py-2">{{ formatDeliveryDate(order) }}</td>
           <td class="px-4 py-2">{{ order.products }}</td>
-          <td class="px-4 py-2">{{ order.totalPrice }}</td>
+          <td class="px-4 py-2">${{ order.totalPrice }}</td>
           <td class="px-4 py-2">{{ order.status }}</td>
         </tr>
       </tbody>
     </table>
+    <div v-if="orders.length === 0" class="mt-4 text-gray-500">
+      No hay órdenes en tu historial.
+    </div>
   </div>
 </template>
 
