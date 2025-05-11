@@ -2,7 +2,7 @@
 import { useRoute } from 'vue-router'
 import { onMounted, ref } from 'vue'
 import type { Order } from '~/types/types'
-import { getOrdersByClientId } from '~/services/ordersService'
+// import { getOrdersByClientId } from '~/services/ordersService'
 
 const route = useRoute()
 const clientId = Number(route.params.clientId)
@@ -10,7 +10,7 @@ const orders = ref<Order[]>([])
 
 const loadOrders = async () => {
   try {
-    orders.value = await getOrdersByClientId(clientId)
+    // orders.value = await getOrdersByClientId(clientId)
   } catch (err) {
     console.error("Error al cargar órdenes:", err)
   }

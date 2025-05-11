@@ -5,9 +5,9 @@
           <h1 class="text-2xl font-bold">Cliente - Sistema de Delivery</h1>
           <ul class="flex space-x-4">
             <li><a href="/home-client" class="hover:underline">Inicio</a></li>
-            <li><a href="/makeOrder" class="hover:underline">Realizar pedido</a></li>
+            <li><a href="/client-order" class="hover:underline">Realizar pedido</a></li>
             <li><a href="/client-orders" class="hover:underline">Mis Pedidos</a></li>
-            <li><a href="/cart" class="hover:underline">Carrito</a></li>
+            <li><a href="/client-cart" class="hover:underline">Carrito</a></li>
             <li><a href="/login" class="hover:underline">Cerrar Sesión</a></li>
           </ul>
         </div>

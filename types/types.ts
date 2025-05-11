@@ -1,5 +1,3 @@
-
-
 export interface Client {
   id: number;
   name: string;
@@ -35,7 +33,7 @@ export interface Company {
   name: string
   phone: string
   email: string
- 
+  type: string
 }
 
 export type Product = {
@@ -45,4 +43,14 @@ export type Product = {
   price: number;
   category: string;
   companyId: number;
-};
+}
+
+export interface Cart {
+  items: CartItem[];
+  totalPrice: number;
+}
+
+export interface CartItem {
+  product: Product; 
+  quantity: number; 
+}

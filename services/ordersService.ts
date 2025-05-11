@@ -1,6 +1,6 @@
 
 import type { Product } from '~/types/types';
-
+import type { CartItem } from '~/types/types';
 
 const config = useRuntimeConfig();
 
@@ -86,6 +86,12 @@ export const getOrdersByClient = async () => {
   return await response.json();
 };
 
+export const getOrdersByClientId = async (clientId: number) => {
+  const response = await fetch(`${config.public.apiBase}/orders/client/${clientId}`);
+  if (!response.ok) throw new Error("Error al obtener las órdenes del cliente");
+  return await response.json();
+};
+
 
 export const getOrdersByDealerId = async (dealerId: number) => {
   const response = await fetch(`${config.public.apiBase}/orders/dealer/${dealerId}`);
@@ -137,4 +143,25 @@ export const getProductsByOrderId = async (orderId: number): Promise<Product[]> 
   }
 
   return await response.json();
+};
+
+export const createOrderWithProducts = async (cartItems: CartItem[]): Promise<void> => {
+  const order = {
+    products: cartItems.map(item => ({
+      id: item.product.id,
+      quantity: item.quantity,
+    })),
+  };
+
+  const response = await fetch(`${config.public.apiBase}/orders`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(order),
+  });
+
+  if (!response.ok) {
+    throw new Error("Error al crear el pedido");
+  }
 };
