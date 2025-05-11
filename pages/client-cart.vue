@@ -46,6 +46,7 @@
 import { computed } from 'vue';
 import { useCartStore } from '~/stores/cart';
 import { createOrder as createOrderService } from '~/services/ordersService';
+import { createOrderDetailsForLastOrder } from '~/services/orderDetailsService';
 
 const cartStore = useCartStore();
 cartStore.loadFromLocalStorage();
@@ -58,6 +59,7 @@ const removeFromCart = (productId: number) => {
 
 const createOrder = async () => {
   try {
+    // Crear la orden
     const productIds = cartStore.products.map((product) => product.id).join(',');
     const order = {
       orderDate: new Date().toISOString(),
@@ -65,11 +67,23 @@ const createOrder = async () => {
     };
 
     await createOrderService(order, productIds);
-    alert('Pedido creado exitosamente.');
+
+    // Crear el detalle de la orden
+    const totalProducts = cartProducts.value.length;
+    const price = cartProducts.value.reduce((sum, product) => sum + product.price, 0);
+    const paymentMethod = "Tarjeta de Crédito"; // Puedes cambiar esto según el método de pago seleccionado
+
+    await createOrderDetailsForLastOrder(paymentMethod, totalProducts, price);
+
+    alert('Pedido y detalles creados exitosamente.');
     cartStore.clearCart();
   } catch (error) {
-    console.error('Error al crear la orden:', error);
-    alert('Error al crear la orden: ');
+    console.error('Error al crear la orden o los detalles:', error);
+    alert('Hubo un error al confirmar el pedido.');
   }
 };
+
+definePageMeta({
+  layout: 'client', // Usa el layout de cliente
+});
 </script>

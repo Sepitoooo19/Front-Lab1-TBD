@@ -9,6 +9,7 @@ export interface Client {
 
 export interface Order {
   id: number
+  address: string
   orderDate: string
   deliveryDate: string
   status: string
@@ -45,12 +46,11 @@ export type Product = {
   companyId: number;
 }
 
-export interface Cart {
-  items: CartItem[];
-  totalPrice: number;
-}
 
-export interface CartItem {
-  product: Product; 
-  quantity: number; 
+export interface OrderDetails {
+  id: number
+  orderId: number
+  totalProducts: number
+  price: number
+  paymentMethod: string
 }

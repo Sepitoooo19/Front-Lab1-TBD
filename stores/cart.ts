@@ -28,8 +28,18 @@ export const useCartStore = defineStore('cart', {
     loadFromLocalStorage() {
       const savedCart = localStorage.getItem('cart');
       if (savedCart) {
-        this.products = JSON.parse(savedCart);
-        console.log('Productos cargados desde localStorage:', this.products);
+        try {
+          const parsedCart = JSON.parse(savedCart);
+          if (Array.isArray(parsedCart)) {
+            this.products = parsedCart;
+            console.log('Productos cargados desde localStorage:', this.products);
+          } else {
+            throw new Error('Datos corruptos en localStorage');
+          }
+        } catch (error) {
+          console.error('Error al cargar productos del carrito:', error);
+          this.products = []; // Reinicia el carrito si los datos son inválidos
+        }
       } else {
         console.log('No hay productos en localStorage.');
       }

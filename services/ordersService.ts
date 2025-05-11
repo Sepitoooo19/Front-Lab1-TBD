@@ -1,6 +1,7 @@
 
-import type { Product } from '~/types/types';
-import type { CartItem } from '~/types/types';
+import type { Product, Order } from '~/types/types';
+
+
 
 const config = useRuntimeConfig();
 
@@ -53,18 +54,15 @@ export const deleteClientById = async (id: number) => {
     return true;
   };
 
-export const getOrdersByClient = async () => {
-  const token = localStorage.getItem('token'); // Obtén el token del localStorage
+export const getOrdersByClient = async (): Promise<Order[]> => {
+  const config = useRuntimeConfig();
+  const token = localStorage.getItem('authToken');
 
-  if (!token) {
-    throw new Error('No se encontró el token de autenticación');
-  }
-
-  const response = await fetch(`http://localhost:8090/orders/client/orders`, {
+  const response = await fetch(`${config.public.apiBase}/orders`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`, // Incluye el token en el encabezado
+      Authorization: `Bearer ${token}`,
     },
   });
 
@@ -153,4 +151,33 @@ export const createOrder = async (order: { orderDate: string; status: string }, 
   if (!response.ok) {
     throw new Error('Error al crear el pedido');
   }
+};
+
+export const getClientAddress = async (): Promise<string> => {
+  const config = useRuntimeConfig();
+  const token = localStorage.getItem('token'); // Cambia 'authToken' por 'token'
+
+  if (!token) {
+    console.error('No se encontró el token de autenticación');
+    throw new Error('No se encontró el token de autenticación');
+  }
+
+  const url = `${config.public.apiBase}/orders/address`;
+  console.log('URL del endpoint:', url);
+
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`, // Incluye el token en el encabezado
+    },
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('Error en la respuesta:', errorText);
+    throw new Error('Error al obtener la dirección del cliente');
+  }
+
+  return await response.text(); // La dirección se devuelve como texto
 };
