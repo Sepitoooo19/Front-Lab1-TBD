@@ -6,6 +6,7 @@
         <ul class="flex space-x-4">
           <li><a href="/home-admin" class="hover:underline">Inicio</a></li>
           <li><a href="/querys" class="hover:underline">Querys Complejas</a></li>
+          <li><a href="/companies-food-volume" class="hover:underline">Vol. Comida</a></li>
           <li><a href="/clients" class="hover:underline">Clientes</a></li>
           <li><a href="/orders" class="hover:underline">Todas las órdenes</a></li>
           <li><a href="/dealers" class="hover:underline">Repartidores</a></li>

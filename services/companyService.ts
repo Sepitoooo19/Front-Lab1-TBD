@@ -49,3 +49,11 @@ export const getCompaniesWithMostFailedDeliveries = async (): Promise<any[]> => 
   }
   return await response.json();
 };
+
+export const getCompaniesByDeliveredFoodVolume = async (): Promise<any[]> => {
+  const response = await fetch(`${config.public.apiBase}/companies/delivered-food-volume`);
+  if (!response.ok) {
+    throw new Error('Error al obtener las empresas por volumen de comida entregada');
+  }
+  return await response.json();
+};
