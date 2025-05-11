@@ -1,11 +1,3 @@
-<template>
-  <div>
-    <h1>Emergencias</h1>
-    <textarea v-model="description" placeholder="Describe la emergencia"></textarea>
-    <button @click="reportEmergency">Notificar Emergencia</button>
-  </div>
-</template>
-
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
@@ -20,3 +12,11 @@ definePageMeta({
     layout: 'dealer', // Usa el layout de repartidor
   });
 </script>
+
+<template>
+  <div>
+    <h1>Emergencias</h1>
+    <textarea v-model="description" placeholder="Describe la emergencia"></textarea>
+    <button @click="reportEmergency">Notificar Emergencia</button>
+  </div>
+</template>
