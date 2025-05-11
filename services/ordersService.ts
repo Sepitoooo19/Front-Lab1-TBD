@@ -5,12 +5,21 @@ import type { Product, Order } from '~/types/types';
 
 const config = useRuntimeConfig();
 
-export const getAllOrders = async () => {
-  const response = await fetch(`${config.public.apiBase}/orders`);
-  if (!response.ok) throw new Error("Error al obtener las órdenes");
+export const getAllOrders = async (): Promise<Order[]> => {
+  const config = useRuntimeConfig();
+  const response = await fetch(`${config.public.apiBase}/orders`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Error al obtener las órdenes');
+  }
+
   return await response.json();
 };
-
 export const getOrderById = async (id: number) => {
   const response = await fetch(`${config.public.apiBase}/orders/${id}`);
   if (!response.ok) throw new Error("Error al obtener la orden");
@@ -56,13 +65,17 @@ export const deleteClientById = async (id: number) => {
 
 export const getOrdersByClient = async (): Promise<Order[]> => {
   const config = useRuntimeConfig();
-  const token = localStorage.getItem('authToken');
+  const token = localStorage.getItem('token'); // Obtén el token del localStorage
 
-  const response = await fetch(`${config.public.apiBase}/orders`, {
+  if (!token) {
+    throw new Error('No se encontró el token de autenticación');
+  }
+
+  const response = await fetch(`${config.public.apiBase}/orders/client/orders`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${token}`, // Envía el token en el encabezado
     },
   });
 

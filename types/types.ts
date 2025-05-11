@@ -14,7 +14,8 @@ export interface Order {
   deliveryDate: string
   status: string
   products: number
-  clientId: Client
+  clientId: number
+  nameClient: string
   dealerId: Dealer
   totalPrice: number
 }
@@ -54,3 +55,9 @@ export interface OrderDetails {
   price: number
   paymentMethod: string
 }
+
+export interface PaymentMethod {
+  id: number
+  type: string
+}
+

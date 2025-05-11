@@ -5,6 +5,7 @@ import axios from 'axios';
 const router = useRouter();
 const username = ref('');
 const password = ref('');
+const loginError = ref('');
 
 const handleLogin = async () => {
   try {
@@ -16,8 +17,14 @@ const handleLogin = async () => {
     const { token, role } = response.data;
 
     // Guarda el token y el rol en el localStorage
-    localStorage.setItem('token', token);
-    localStorage.setItem('role', role); // Agrega esta línea
+    console.log('Token recibido:', token); // Verifica el token recibido
+    console.log('Rol recibido:', role); // Verifica el rol recibido
+    localStorage.setItem('token', token); // Sobrescribe el token anterior
+    localStorage.setItem('role', role);
+
+    // Verifica que el token y el rol se hayan guardado correctamente
+    console.log('Token guardado en localStorage:', localStorage.getItem('token'));
+    console.log('Rol guardado en localStorage:', localStorage.getItem('role'));
 
     // Redirige al usuario según su rol
     if (role === 'ADMIN') {
@@ -29,14 +36,13 @@ const handleLogin = async () => {
     }
   } catch (error) {
     console.error('Error al iniciar sesión:', error);
-    alert('Credenciales incorrectas');
+    loginError.value = 'Credenciales incorrectas';
   }
 };
 
 const goToRegister = () => {
   router.push('/register');
 };
-
 </script>
 
 <template>

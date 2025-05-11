@@ -60,3 +60,23 @@ export const getProductsByIds = async (ids: number[]): Promise<Product[]> => {
   }
   return await response.json();
 };
+
+export const getCompanyIdByProductId = async (productId: number): Promise<number> => {
+  const response = await fetch(`${config.public.apiBase}/products/companyid/${productId}`);
+  console.log('Respuesta del backend:', response);
+
+  if (!response.ok) {
+    throw new Error('Error al obtener el ID de la empresa por producto');
+  }
+
+  // Procesa la respuesta como un número directamente
+  const companyId = await response.json();
+  console.log('Company ID obtenido del backend:', companyId);
+
+  // Verifica que la respuesta sea un número válido
+  if (typeof companyId !== 'number') {
+    throw new Error('El backend devolvió un valor no válido para el ID de la empresa');
+  }
+
+  return companyId;
+};

@@ -16,7 +16,7 @@
       <tbody>
         <tr v-for="order in orders" :key="order.id" class="border-t hover:bg-gray-50">
           <td class="px-4 py-2">{{ order.id }}</td>
-          <td class="px-4 py-2">{{ order.clientId.name }}</td>
+          <td class="px-4 py-2">{{ order.nameClient }}</td> <!-- Muestra el nombre del cliente -->
           <td class="px-4 py-2">{{ formatDate(order.orderDate) }}</td>
           <td class="px-4 py-2">{{ formatDate(order.deliveryDate) }}</td>
           <td class="px-4 py-2">{{ order.status }}</td>
@@ -34,6 +34,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { getAllOrders } from '~/services/ordersService'; // Importa el servicio para obtener las órdenes
+import { getNameByClientId } from '~/services/clientService'; // Importa el servicio para obtener el nombre del cliente
 import type { Order } from '~/types/types'; // Importa la interfaz Order
 
 const orders = ref<Order[]>([]); // Lista de órdenes
@@ -46,12 +47,26 @@ const formatDate = (dateStr: string) => {
 // Carga las órdenes al montar el componente
 onMounted(async () => {
   try {
-    orders.value = await getAllOrders();
+    const ordersData: Order[] = await getAllOrders(); // Obtén todas las órdenes
+
+    // Itera sobre las órdenes y agrega el nombre del cliente
+    const ordersWithClientNames = await Promise.all(
+      ordersData.map(async (order: Order) => {
+        try {
+          const clientName = await getNameByClientId(order.clientId); // Obtén el nombre del cliente
+          return { ...order, nameClient: clientName }; // Asigna el nombre del cliente al campo nameClient
+        } catch (err) {
+          console.error(`Error al obtener el nombre del cliente con ID ${order.clientId}:`, err);
+          return { ...order, nameClient: "Desconocido" }; // Valor predeterminado en caso de error
+        }
+      })
+    );
+
+    orders.value = ordersWithClientNames; // Asigna las órdenes con los nombres de los clientes
   } catch (err) {
-    console.error('Error al cargar las órdenes:', err);
+    console.error("Error al cargar las órdenes:", err);
   }
 });
-
 definePageMeta({
     layout: 'admin',
     middleware: 'auth-role'

@@ -46,4 +46,15 @@ export const deleteClientById = async (id: number) => {
   return await response.json();
 };
 
+export const getNameByClientId = async (clientId: number): Promise<string> => {
+  const config = useRuntimeConfig();
+  const response = await fetch(`${config.public.apiBase}/clients/name/${clientId}`);
+
+  if (!response.ok) {
+    throw new Error("Error al obtener el nombre del cliente");
+  }
+
+  return await response.text(); // Usa text() en lugar de json()
+};
+
 
