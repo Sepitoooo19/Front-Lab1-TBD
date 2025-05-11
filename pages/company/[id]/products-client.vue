@@ -1,3 +1,42 @@
+
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { getProductsByCompanyId } from '~/services/productService';
+import { getCompanyById } from '~/services/companyService';
+import { useCartStore } from '~/stores/cart';
+import type { Product, Company } from '~/types/types'; // Importa el tipo Product
+
+const route = useRoute();
+const companyId = Number(route.params.id); // Convierte el ID de la empresa a un número
+const products = ref<Product[]>([]); // Lista de productos
+const company = ref<Company | null>(null); // Permite que inicialmente sea null
+const cartStore = useCartStore();
+cartStore.loadFromLocalStorage();
+
+const handleAddToCart = (product: Product) => {
+  cartStore.addProduct({
+    id: product.id,
+    name: product.name,
+    price: product.price, // Asegúrate de que `product.price` tenga un valor válido
+  });
+  console.log('Producto agregado al carrito:', product);
+};
+
+onMounted(async () => {
+  try {
+    products.value = await getProductsByCompanyId(companyId);
+    console.log('Productos cargados:', products.value);
+  } catch (err) {
+    console.error('Error al cargar los productos:', err);
+  }
+});
+
+definePageMeta({
+  layout: 'client', // Usa el layout de cliente
+});
+</script>
+
 <template>
   <div>
     <!-- Título dinámico basado en el nombre de la empresa -->
@@ -38,41 +77,3 @@
     </table>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
-import { getProductsByCompanyId } from '~/services/productService';
-import { getCompanyById } from '~/services/companyService';
-import { useCartStore } from '~/stores/cart';
-import type { Product, Company } from '~/types/types'; // Importa el tipo Product
-
-const route = useRoute();
-const companyId = Number(route.params.id); // Convierte el ID de la empresa a un número
-const products = ref<Product[]>([]); // Lista de productos
-const company = ref<Company | null>(null); // Permite que inicialmente sea null
-const cartStore = useCartStore();
-cartStore.loadFromLocalStorage();
-
-const handleAddToCart = (product: Product) => {
-  cartStore.addProduct({
-    id: product.id,
-    name: product.name,
-    price: product.price, // Asegúrate de que `product.price` tenga un valor válido
-  });
-  console.log('Producto agregado al carrito:', product);
-};
-
-onMounted(async () => {
-  try {
-    products.value = await getProductsByCompanyId(companyId);
-    console.log('Productos cargados:', products.value);
-  } catch (err) {
-    console.error('Error al cargar los productos:', err);
-  }
-});
-
-definePageMeta({
-  layout: 'client', // Usa el layout de cliente
-});
-</script>

@@ -1,3 +1,34 @@
+
+
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { getProductsByCompanyId } from '~/services/productService'; // Servicio para obtener productos
+import { getCompanyById } from '~/services/companyService'; // Servicio para obtener la empresa
+
+const route = useRoute();
+const companyId = route.params.id; // Obtén el ID de la empresa desde la URL
+const products = ref([]); // Lista de productos
+const company = ref({}); // Datos de la empresa
+
+onMounted(async () => {
+  try {
+    // Carga los productos de la empresa
+    products.value = await getProductsByCompanyId(companyId);
+
+    // Carga los datos de la empresa
+    company.value = await getCompanyById(companyId);
+    console.log('Datos de la empresa cargados:', company.value); // Verifica los datos en la consola
+  } catch (err) {
+    console.error('Error al cargar los datos:', err);
+  }
+});
+
+definePageMeta({
+  layout: 'admin', // Usa el layout de administrador
+});
+</script>
+
 <template>
   <div>
     <!-- Título dinámico basado en el nombre de la empresa -->
@@ -31,32 +62,3 @@
     </table>
   </div>
 </template>
-
-<script setup>
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
-import { getProductsByCompanyId } from '~/services/productService'; // Servicio para obtener productos
-import { getCompanyById } from '~/services/companyService'; // Servicio para obtener la empresa
-
-const route = useRoute();
-const companyId = route.params.id; // Obtén el ID de la empresa desde la URL
-const products = ref([]); // Lista de productos
-const company = ref({}); // Datos de la empresa
-
-onMounted(async () => {
-  try {
-    // Carga los productos de la empresa
-    products.value = await getProductsByCompanyId(companyId);
-
-    // Carga los datos de la empresa
-    company.value = await getCompanyById(companyId);
-    console.log('Datos de la empresa cargados:', company.value); // Verifica los datos en la consola
-  } catch (err) {
-    console.error('Error al cargar los datos:', err);
-  }
-});
-
-definePageMeta({
-  layout: 'admin', // Usa el layout de administrador
-});
-</script>

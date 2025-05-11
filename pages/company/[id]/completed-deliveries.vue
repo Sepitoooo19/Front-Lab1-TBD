@@ -1,3 +1,30 @@
+
+
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { getDeliveredOrdersByCompanyId } from '~/services/ordersService'; // Importa el servicio para obtener las entregas fallidas
+
+const route = useRoute();
+const companyId = route.params.id; // Obtiene el parámetro de la ruta
+const failedOrders = ref([]); // Lista de entregas fallidas
+const error = ref(null); // Manejo de errores
+
+// Obtén las entregas fallidas al montar el componente
+onMounted(async () => {
+  try {
+    failedOrders.value = await getDeliveredOrdersByCompanyId(companyId);
+  } catch (err) {
+    console.error('Error al obtener las entregas completadas:', err);
+    error.value = 'No se pudieron cargar las entregas fallidas.';
+  }
+});
+
+ definePageMeta({
+    layout: 'admin', // Usa el layout de administrador
+  });
+</script>
+
 <template>
   <div>
     <h1 class="text-2xl font-bold mb-4">Entregas Completadas - Empresa {{ companyId }}</h1>
@@ -33,28 +60,3 @@
     <div v-if="error" class="text-red-500 mt-4">{{ error }}</div>
   </div>
 </template>
-
-<script setup>
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
-import { getDeliveredOrdersByCompanyId } from '~/services/ordersService'; // Importa el servicio para obtener las entregas fallidas
-
-const route = useRoute();
-const companyId = route.params.id; // Obtiene el parámetro de la ruta
-const failedOrders = ref([]); // Lista de entregas fallidas
-const error = ref(null); // Manejo de errores
-
-// Obtén las entregas fallidas al montar el componente
-onMounted(async () => {
-  try {
-    failedOrders.value = await getDeliveredOrdersByCompanyId(companyId);
-  } catch (err) {
-    console.error('Error al obtener las entregas completadas:', err);
-    error.value = 'No se pudieron cargar las entregas fallidas.';
-  }
-});
-
- definePageMeta({
-    layout: 'admin', // Usa el layout de administrador
-  });
-</script>
