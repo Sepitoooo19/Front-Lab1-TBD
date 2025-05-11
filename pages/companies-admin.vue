@@ -25,9 +25,7 @@
           <td class="px-4 py-2 space-x-2">
             <button @click="viewAllDeliveries(company.id)" class="bg-gray-500 text-white px-3 py-1 rounded">Ver Entregas</button>
             <button @click="viewCompletedDeliveries(company.id)" class="bg-blue-500 text-white px-3 py-1 rounded">Entregas</button>
-            <button @click="viewFailedDeliveries(company.id)" class="bg-red-500 text-white px-3 py-1 rounded">
-              Fallidas
-            </button>
+            <button @click="viewFailedDeliveries(company.id)" class="bg-red-500 text-white px-3 py-1 rounded">Fallidas</button>
             <button @click="viewProducts(company.id)" class="bg-green-500 text-white px-3 py-1 rounded">Productos</button>
           </td>
         </tr>
@@ -38,7 +36,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { getAllCompanies } from '~/services/companyService'; // Importa la función del servicio
+import { getAllCompanies, updateCompanyMetrics } from '~/services/companyService'; // Importa la función del servicio
 import { getProductsByCompanyId } from '~/services/productService';
 import { useRouter } from 'vue-router';
 
@@ -48,13 +46,13 @@ const companies = ref([]);
 // Obtiene las empresas al montar el componente
 onMounted(async () => {
   try {
-    companies.value = await getAllCompanies(); // Llama a la función para obtener las empresas
-  } catch (error) {
-    console.error('Error al obtener la lista de empresas:', error);
+    await updateCompanyMetrics(); // Actualiza las métricas antes de obtener las empresas
+    companies.value = await getAllCompanies();
+  } catch (err) {
+    console.error('Error al cargar las empresas:', err);
+    err.value = 'Hubo un error al cargar las empresas.';
   }
 });
-
-
 
 
 // Funciones para manejar las acciones de los botones

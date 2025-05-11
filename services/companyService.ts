@@ -3,9 +3,9 @@ const config = useRuntimeConfig();
 import type { Company } from '~/types/types';
 
 export const getAllCompanies = async (): Promise<Company[]> => {
-  const response = await fetch(`${useRuntimeConfig().public.apiBase}/companies`);
+  const response = await fetch(`${config.public.apiBase}/companies`);
   if (!response.ok) {
-    throw new Error('Error al obtener las compañías');
+    throw new Error('Error al obtener las empresas');
   }
   return await response.json();
 };
@@ -30,5 +30,22 @@ export const getCompanyById = async (companyId: string) => {
     throw new Error('Error al obtener la compañía');
   }
 
+  return await response.json();
+};
+
+export const updateCompanyMetrics = async (): Promise<void> => {
+  const response = await fetch(`${config.public.apiBase}/companies/update-metrics`, {
+    method: 'POST',
+  });
+  if (!response.ok) {
+    throw new Error('Error al actualizar las métricas de las empresas');
+  }
+};
+
+export const getCompaniesWithMostFailedDeliveries = async (): Promise<any[]> => {
+  const response = await fetch(`${config.public.apiBase}/companies/failed-deliveries`);
+  if (!response.ok) {
+    throw new Error('Error al obtener las empresas con más entregas fallidas');
+  }
   return await response.json();
 };

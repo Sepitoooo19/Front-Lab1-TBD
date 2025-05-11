@@ -80,3 +80,11 @@ export const getCompanyIdByProductId = async (productId: number): Promise<number
 
   return companyId;
 };
+
+export const getTopProductsByCategoryForLastMonth = async (): Promise<any[]> => {
+  const response = await fetch(`${config.public.apiBase}/products/top-by-category`);
+  if (!response.ok) {
+    throw new Error('Error al obtener los productos más pedidos por categoría');
+  }
+  return await response.json();
+};

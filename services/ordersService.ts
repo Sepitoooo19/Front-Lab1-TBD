@@ -1,5 +1,5 @@
 
-import type { Product, Order } from '~/types/types';
+import type { Product, Order, TopSpender } from '~/types/types';
 
 
 
@@ -108,19 +108,18 @@ export const getOrdersByCompanyId = async (companyId: number) => {
     return await response.json();
   }
 
-export const getDeliveredOrdersByCompanyId = async (companyId: number) => {
-    const response = await fetch(`${config.public.apiBase}/orders/delivered/company/${companyId}`);
-    if (!response.ok) throw new Error("Error al obtener las órdenes de la compañía");
-    return await response.json();
-  }
-
-
-
 export const getFailedDeliveriesByCompanyId = async (companyId: number) => {
-  const config = useRuntimeConfig();
   const response = await fetch(`${config.public.apiBase}/orders/failed/company/${companyId}`);
   if (!response.ok) {
     throw new Error('Error al obtener las entregas fallidas');
+  }
+  return await response.json();
+};
+
+export const getDeliveredOrdersByCompanyId = async (companyId: number) => {
+  const response = await fetch(`${config.public.apiBase}/orders/delivered/company/${companyId}`);
+  if (!response.ok) {
+    throw new Error('Error al obtener las órdenes entregadas');
   }
   return await response.json();
 };
@@ -193,4 +192,33 @@ export const getClientAddress = async (): Promise<string> => {
   }
 
   return await response.text(); // La dirección se devuelve como texto
+};
+
+export const getTopSpender = async (): Promise<TopSpender> => {
+  const response = await fetch(`${config.public.apiBase}/orders/top-spender`);
+  if (!response.ok) {
+    throw new Error('Error al obtener el cliente con mayor gasto');
+  }
+  return await response.json();
+};
+
+
+export const markOrderAsUrgent = async (orderId: number): Promise<void> => {
+  const token = localStorage.getItem('token'); // Obtén el token del localStorage
+
+  if (!token) {
+    throw new Error('No se encontró el token de autenticación');
+  }
+
+  const response = await fetch(`${config.public.apiBase}/orders/${orderId}/urgent`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`, // Incluye el token en el encabezado
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Error al marcar el pedido como URGENTE');
+  }
 };

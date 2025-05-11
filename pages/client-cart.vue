@@ -50,6 +50,17 @@
         </option>
       </select>
 
+      <!-- Botón para marcar como URGENTE -->
+      <div class="flex items-center mb-4">
+        <input
+          type="checkbox"
+          id="urgent"
+          v-model="isUrgent"
+          class="mr-2"
+        />
+        <label for="urgent" class="text-sm font-medium">Marcar como URGENTE</label>
+      </div>
+
       <button
         class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-4"
         @click="createOrder"
@@ -75,6 +86,7 @@ cartStore.loadFromLocalStorage();
 const cartProducts = computed(() => cartStore.products);
 const paymentMethods = ref<PaymentMethod[]>([]); // Lista de métodos de pago
 const selectedPaymentMethod = ref<string | null>(null); // Método de pago seleccionado
+const isUrgent = ref<boolean>(false); // Estado para marcar como URGENTE
 const errorMessage = ref<string | null>(null);
 
 const removeFromCart = (productId: number) => {
@@ -110,7 +122,7 @@ const createOrder = async () => {
     const productIds = cartStore.products.map((product) => product.id).join(',');
     const order = {
       orderDate: new Date().toISOString(),
-      status: "PENDIENTE",
+      status: isUrgent.value ? "URGENTE" : "PENDIENTE", // Cambia el estado según el checkbox
     };
 
     await createOrderService(order, productIds);
@@ -134,14 +146,3 @@ definePageMeta({
   layout: 'client', // Usa el layout de cliente
 });
 </script>
-<style scoped>
-select {
-  color: black; /* Asegura que el texto del selector sea negro */
-  background-color: white; /* Fondo blanco */
-}
-
-option {
-  color: black; /* Asegura que el texto de las opciones sea negro */
-  background-color: white; /* Fondo blanco */
-}
-</style>

@@ -44,3 +44,13 @@ export const getOrderDetailsByOrderId = async (orderId: number): Promise<OrderDe
 
   return await response.json();
 };
+
+export const getMostUsedPaymentMethodForUrgentOrders = async (): Promise<{ method: string; count: number }> => {
+  const response = await fetch(`${config.public.apiBase}/order-details/urgent/payment-method`);
+  if (!response.ok) {
+    throw new Error('Error al obtener el método de pago más utilizado en pedidos urgentes');
+  }
+  const data = await response.json();
+  const [method, count] = Object.entries(data)[0]; // Extraer el método y el conteo
+  return { method, count: Number(count) };
+};

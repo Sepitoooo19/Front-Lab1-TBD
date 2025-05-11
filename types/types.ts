@@ -61,3 +61,14 @@ export interface PaymentMethod {
   type: string
 }
 
+export interface TopSpender{
+  id: number
+  name: string
+  rut: string
+  email: string
+  phone: string
+  address: string
+  totalSpent: number
+
+}
+
