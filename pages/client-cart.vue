@@ -1,75 +1,4 @@
-<template>
-  <div class="p-6">
-    <h1 class="text-2xl font-bold mb-4">Carrito de Compras</h1>
 
-    <table v-if="cartProducts.length > 0" class="min-w-full border border-gray-300 shadow-md rounded-lg overflow-hidden">
-      <thead class="bg-gray-100">
-        <tr>
-          <th class="px-4 py-2 text-left">ID</th>
-          <th class="px-4 py-2 text-left">Nombre</th>
-          <th class="px-4 py-2 text-left">Precio</th>
-          <th class="px-4 py-2 text-left">Acción</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="product in cartProducts" :key="product.id" class="border-t hover:bg-gray-50">
-          <td class="px-4 py-2">{{ product.id }}</td>
-          <td class="px-4 py-2">{{ product.name }}</td>
-          <td class="px-4 py-2">${{ product.price }}</td>
-          <td class="px-4 py-2">
-            <button
-              class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-              @click="removeFromCart(product.id)"
-            >
-              Eliminar
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <div v-else class="mt-4 text-gray-500">
-      No hay productos en el carrito.
-    </div>
-
-    <div v-if="cartProducts.length > 0" class="mt-4">
-      <label for="payment-method" class="block text-sm font-medium mb-2">Método de Pago</label>
-      <select
-        id="payment-method"
-        v-model="selectedPaymentMethod"
-        class="w-full border px-3 py-2 rounded mb-4 text-black bg-white"
-      >
-        <option value="" disabled class="text-gray-500">Selecciona un método de pago</option>
-        <option
-          v-for="method in paymentMethods"
-          :key="method.id"
-          :value="method.type"
-          class="text-black"
-        >
-          {{ method.type }}
-        </option>
-      </select>
-
-      <!-- Botón para marcar como URGENTE -->
-      <div class="flex items-center mb-4">
-        <input
-          type="checkbox"
-          id="urgent"
-          v-model="isUrgent"
-          class="mr-2"
-        />
-        <label for="urgent" class="text-sm font-medium">Marcar como URGENTE</label>
-      </div>
-
-      <button
-        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-4"
-        @click="createOrder"
-      >
-        Confirmar Pedido
-      </button>
-    </div>
-  </div>
-</template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
@@ -146,3 +75,76 @@ definePageMeta({
   layout: 'client', // Usa el layout de cliente
 });
 </script>
+
+<template>
+  <div class="p-6">
+    <h1 class="text-2xl font-bold mb-4">Carrito de Compras</h1>
+
+    <table v-if="cartProducts.length > 0" class="min-w-full border border-gray-300 shadow-md rounded-lg overflow-hidden">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-4 py-2 text-left">ID</th>
+          <th class="px-4 py-2 text-left">Nombre</th>
+          <th class="px-4 py-2 text-left">Precio</th>
+          <th class="px-4 py-2 text-left">Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="product in cartProducts" :key="product.id" class="border-t hover:bg-gray-50">
+          <td class="px-4 py-2">{{ product.id }}</td>
+          <td class="px-4 py-2">{{ product.name }}</td>
+          <td class="px-4 py-2">${{ product.price }}</td>
+          <td class="px-4 py-2">
+            <button
+              class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+              @click="removeFromCart(product.id)"
+            >
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div v-else class="mt-4 text-gray-500">
+      No hay productos en el carrito.
+    </div>
+
+    <div v-if="cartProducts.length > 0" class="mt-4">
+      <label for="payment-method" class="block text-sm font-medium mb-2">Método de Pago</label>
+      <select
+        id="payment-method"
+        v-model="selectedPaymentMethod"
+        class="w-full border px-3 py-2 rounded mb-4 text-black bg-white"
+      >
+        <option value="" disabled class="text-gray-500">Selecciona un método de pago</option>
+        <option
+          v-for="method in paymentMethods"
+          :key="method.id"
+          :value="method.type"
+          class="text-black"
+        >
+          {{ method.type }}
+        </option>
+      </select>
+
+      <!-- Botón para marcar como URGENTE -->
+      <div class="flex items-center mb-4">
+        <input
+          type="checkbox"
+          id="urgent"
+          v-model="isUrgent"
+          class="mr-2"
+        />
+        <label for="urgent" class="text-sm font-medium">Marcar como URGENTE</label>
+      </div>
+
+      <button
+        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-4"
+        @click="createOrder"
+      >
+        Confirmar Pedido
+      </button>
+    </div>
+  </div>
+</template>

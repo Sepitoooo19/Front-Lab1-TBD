@@ -1,3 +1,19 @@
+
+
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { getProductsByCompanyId } from '~/services/companyService';
+
+const route = useRoute();
+const companyId = route.params.id;
+const products = ref([]);
+
+onMounted(async () => {
+  products.value = await getProductsByCompanyId(companyId);
+});
+</script>
+
 <template>
   <div>
     <h1 class="text-2xl font-bold mb-4">Productos - Empresa {{ company.name }}</h1>
@@ -23,17 +39,3 @@
     </table>
   </div>
 </template>
-
-<script setup>
-import { ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
-import { getProductsByCompanyId } from '~/services/companyService';
-
-const route = useRoute();
-const companyId = route.params.id;
-const products = ref([]);
-
-onMounted(async () => {
-  products.value = await getProductsByCompanyId(companyId);
-});
-</script>
