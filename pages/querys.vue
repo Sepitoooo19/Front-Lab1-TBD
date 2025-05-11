@@ -1,3 +1,80 @@
+
+
+<script setup lang="ts">
+import { ref } from 'vue';
+import { getTopSpender } from '~/services/ordersService';
+import { getTopProductsByCategoryForLastMonth } from '~/services/productService';
+import { getCompaniesWithMostFailedDeliveries } from '~/services/companyService';
+import { getMostUsedPaymentMethodForUrgentOrders } from '~/services/orderDetailsService'; // Importa el servicio para obtener el método de pago más utilizado
+import type { TopSpender } from '~/types/types';
+
+const topSpender = ref<TopSpender | null>(null);
+const topProducts = ref<any[]>([]); // Lista de productos más pedidos
+const companiesWithMostFailedDeliveries = ref<any[]>([]); // Lista de empresas con más entregas fallidas
+const mostUsedPaymentMethod = ref<{ method: string; count: number } | null>(null); // Método de pago más utilizado
+const errorMessage = ref<string | null>(null);
+
+// Función para obtener el Cliente con Mayor Gasto
+const fetchTopSpender = async () => {
+  try {
+    errorMessage.value = null;
+    topSpender.value = await getTopSpender();
+    console.log('Cliente con mayor gasto:', topSpender.value);
+  } catch (error) {
+    console.error('Error al obtener el cliente con mayor gasto:', error);
+    errorMessage.value = 'Hubo un error al cargar el cliente con mayor gasto.';
+  }
+};
+
+// Función para obtener los Productos Más Pedidos por Categoría
+const fetchTopProducts = async () => {
+  try {
+    errorMessage.value = null;
+    topProducts.value = await getTopProductsByCategoryForLastMonth();
+    console.log('Productos más pedidos por categoría:', topProducts.value);
+  } catch (error) {
+    console.error('Error al obtener los productos más pedidos:', error);
+    errorMessage.value = 'Hubo un error al cargar los productos más pedidos.';
+  }
+};
+
+// Función para obtener las Empresas con Más Entregas Fallidas
+const fetchCompaniesWithMostFailedDeliveries = async () => {
+  try {
+    errorMessage.value = null;
+    companiesWithMostFailedDeliveries.value = await getCompaniesWithMostFailedDeliveries();
+    console.log('Empresas con más entregas fallidas:', companiesWithMostFailedDeliveries.value);
+  } catch (error) {
+    console.error('Error al obtener las empresas con más entregas fallidas:', error);
+    errorMessage.value = 'Hubo un error al cargar las empresas con más entregas fallidas.';
+  }
+};
+
+// Función para obtener el Método de Pago Más Utilizado en Pedidos Urgentes
+const fetchMostUsedPaymentMethod = async () => {
+  try {
+    errorMessage.value = null;
+    mostUsedPaymentMethod.value = await getMostUsedPaymentMethodForUrgentOrders();
+    console.log('Método de pago más utilizado en pedidos urgentes:', mostUsedPaymentMethod.value);
+  } catch (error) {
+    console.error('Error al obtener el método de pago más utilizado:', error);
+    errorMessage.value = 'Hubo un error al cargar el método de pago más utilizado en pedidos urgentes.';
+  }
+};
+
+definePageMeta({
+  layout: 'admin',
+  middleware: 'auth-role'
+});
+</script>
+
+<style scoped>
+/* Estilo opcional para los cuadros */
+div {
+  font-family: Arial, sans-serif;
+}
+</style>
+
 <template>
   <div class="p-6">
     <h1 class="text-2xl font-bold mb-4">Consultas</h1>
@@ -113,78 +190,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue';
-import { getTopSpender } from '~/services/ordersService';
-import { getTopProductsByCategoryForLastMonth } from '~/services/productService';
-import { getCompaniesWithMostFailedDeliveries } from '~/services/companyService';
-import { getMostUsedPaymentMethodForUrgentOrders } from '~/services/orderDetailsService'; // Importa el servicio para obtener el método de pago más utilizado
-import type { TopSpender } from '~/types/types';
-
-const topSpender = ref<TopSpender | null>(null);
-const topProducts = ref<any[]>([]); // Lista de productos más pedidos
-const companiesWithMostFailedDeliveries = ref<any[]>([]); // Lista de empresas con más entregas fallidas
-const mostUsedPaymentMethod = ref<{ method: string; count: number } | null>(null); // Método de pago más utilizado
-const errorMessage = ref<string | null>(null);
-
-// Función para obtener el Cliente con Mayor Gasto
-const fetchTopSpender = async () => {
-  try {
-    errorMessage.value = null;
-    topSpender.value = await getTopSpender();
-    console.log('Cliente con mayor gasto:', topSpender.value);
-  } catch (error) {
-    console.error('Error al obtener el cliente con mayor gasto:', error);
-    errorMessage.value = 'Hubo un error al cargar el cliente con mayor gasto.';
-  }
-};
-
-// Función para obtener los Productos Más Pedidos por Categoría
-const fetchTopProducts = async () => {
-  try {
-    errorMessage.value = null;
-    topProducts.value = await getTopProductsByCategoryForLastMonth();
-    console.log('Productos más pedidos por categoría:', topProducts.value);
-  } catch (error) {
-    console.error('Error al obtener los productos más pedidos:', error);
-    errorMessage.value = 'Hubo un error al cargar los productos más pedidos.';
-  }
-};
-
-// Función para obtener las Empresas con Más Entregas Fallidas
-const fetchCompaniesWithMostFailedDeliveries = async () => {
-  try {
-    errorMessage.value = null;
-    companiesWithMostFailedDeliveries.value = await getCompaniesWithMostFailedDeliveries();
-    console.log('Empresas con más entregas fallidas:', companiesWithMostFailedDeliveries.value);
-  } catch (error) {
-    console.error('Error al obtener las empresas con más entregas fallidas:', error);
-    errorMessage.value = 'Hubo un error al cargar las empresas con más entregas fallidas.';
-  }
-};
-
-// Función para obtener el Método de Pago Más Utilizado en Pedidos Urgentes
-const fetchMostUsedPaymentMethod = async () => {
-  try {
-    errorMessage.value = null;
-    mostUsedPaymentMethod.value = await getMostUsedPaymentMethodForUrgentOrders();
-    console.log('Método de pago más utilizado en pedidos urgentes:', mostUsedPaymentMethod.value);
-  } catch (error) {
-    console.error('Error al obtener el método de pago más utilizado:', error);
-    errorMessage.value = 'Hubo un error al cargar el método de pago más utilizado en pedidos urgentes.';
-  }
-};
-
-definePageMeta({
-  layout: 'admin',
-  middleware: 'auth-role'
-});
-</script>
-
-<style scoped>
-/* Estilo opcional para los cuadros */
-div {
-  font-family: Arial, sans-serif;
-}
-</style>
