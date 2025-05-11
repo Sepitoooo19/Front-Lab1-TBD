@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Título dinámico basado en el nombre de la empresa -->
-    <h1 v-if="company.name" class="text-2xl font-bold mb-4">
+    <h1 v-if="company" class="text-2xl font-bold mb-4">
       Productos - Empresa {{ company.name }}
     </h1>
     <h1 v-else class="text-2xl font-bold mb-4">
@@ -13,7 +13,6 @@
       <thead class="bg-gray-100">
         <tr>
           <th class="px-4 py-2 text-left">Nombre</th>
-          <th class="px-4 py-2 text-left">Tipo</th>
           <th class="px-4 py-2 text-left">Precio</th>
           <th class="px-4 py-2 text-left">Acción</th>
         </tr>
@@ -25,7 +24,6 @@
           class="hover:bg-gray-50"
         >
           <td class="px-4 py-2">{{ product.name }}</td>
-          <td class="px-4 py-2">{{ product.type }}</td>
           <td class="px-4 py-2">${{ product.price }}</td>
           <td class="px-4 py-2">
             <button
@@ -41,37 +39,36 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { getProductsByCompanyId } from '~/services/productService'; // Servicio para obtener productos
-import { getCompanyById } from '~/services/companyService'; // Servicio para obtener la empresa
-import { addToCart } from '~/services/cartService'; // Servicio para agregar al carrito
+import { getProductsByCompanyId } from '~/services/productService';
+import { getCompanyById } from '~/services/companyService';
+import { useCartStore } from '~/stores/cart';
+import type { Product, Company } from '~/types/types'; // Importa el tipo Product
 
 const route = useRoute();
-const companyId = route.params.id; // Obtén el ID de la empresa desde la URL
-const products = ref([]); // Lista de productos
-const company = ref({}); // Datos de la empresa
+const companyId = Number(route.params.id); // Convierte el ID de la empresa a un número
+const products = ref<Product[]>([]); // Lista de productos
+const company = ref<Company | null>(null); // Permite que inicialmente sea null
+const cartStore = useCartStore();
+cartStore.loadFromLocalStorage();
 
-const handleAddToCart = async (product) => {
-  try {
-    await addToCart(product.id); // Agregar producto al carrito
-    alert(`Producto "${product.name}" agregado al carrito.`);
-  } catch (err) {
-    console.error('Error al agregar producto al carrito:', err);
-  }
+const handleAddToCart = (product: Product) => {
+  cartStore.addProduct({
+    id: product.id,
+    name: product.name,
+    price: product.price, // Asegúrate de que `product.price` tenga un valor válido
+  });
+  console.log('Producto agregado al carrito:', product);
 };
 
 onMounted(async () => {
   try {
-    // Carga los productos de la empresa
     products.value = await getProductsByCompanyId(companyId);
-
-    // Carga los datos de la empresa
-    company.value = await getCompanyById(companyId);
-    console.log('Datos de la empresa cargados:', company.value); // Verifica los datos en la consola
+    console.log('Productos cargados:', products.value);
   } catch (err) {
-    console.error('Error al cargar los datos:', err);
+    console.error('Error al cargar los productos:', err);
   }
 });
 
@@ -79,6 +76,3 @@ definePageMeta({
   layout: 'client', // Usa el layout de cliente
 });
 </script>
-
-<style scoped>
-</style>

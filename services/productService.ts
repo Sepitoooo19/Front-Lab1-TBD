@@ -1,4 +1,5 @@
 
+import type { Product } from '~/types/types';
 
 const config = useRuntimeConfig();
 
@@ -49,5 +50,13 @@ export const deleteProductById = async (id: number) => {
 export const getProductsByCompanyId = async (companyId: number) => {
   const response = await fetch(`${config.public.apiBase}/products/company/${companyId}`);
   if (!response.ok) throw new Error("Error al obtener los productos por empresa");
+  return await response.json();
+};
+
+export const getProductsByIds = async (ids: number[]): Promise<Product[]> => {
+  const response = await fetch(`http://localhost:8090/products?ids=${ids.join(',')}`);
+  if (!response.ok) {
+    throw new Error('Error al obtener los productos');
+  }
   return await response.json();
 };

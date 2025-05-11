@@ -1,75 +1,75 @@
 <template>
-  <div>
+  <div class="p-6">
     <h1 class="text-2xl font-bold mb-4">Carrito de Compras</h1>
-    <div v-if="cart.length === 0" class="text-gray-500">
-      Tu carrito está vacío.
+
+    <table v-if="cartProducts.length > 0" class="min-w-full border border-gray-300 shadow-md rounded-lg overflow-hidden">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-4 py-2 text-left">ID</th>
+          <th class="px-4 py-2 text-left">Nombre</th>
+          <th class="px-4 py-2 text-left">Precio</th>
+          <th class="px-4 py-2 text-left">Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="product in cartProducts" :key="product.id" class="border-t hover:bg-gray-50">
+          <td class="px-4 py-2">{{ product.id }}</td>
+          <td class="px-4 py-2">{{ product.name }}</td>
+          <td class="px-4 py-2">${{ product.price }}</td>
+          <td class="px-4 py-2">
+            <button
+              class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+              @click="removeFromCart(product.id)"
+            >
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div v-else class="mt-4 text-gray-500">
+      No hay productos en el carrito.
     </div>
-    <ul>
-      <li
-        v-for="item in cart"
-        :key="item.product.id"
-        class="border border-gray-300 p-4 mb-2 rounded"
-      >
-        <h2 class="font-semibold">{{ item.product.name }}</h2>
-        <p>Precio: ${{ item.product.price }}</p>
-        <p>Cantidad: {{ item.quantity }}</p>
-        <button
-          class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-          @click="handleRemoveFromCart(item.product.id)"
-        >
-          Eliminar
-        </button>
-      </li>
-    </ul>
+
     <button
+      v-if="cartProducts.length > 0"
       class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mt-4"
-      @click="goToPay"
+      @click="createOrder"
     >
-      Pagar
+      Confirmar Pedido
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { getCart } from '~/services/cartService';
-import { removeFromCart } from '~/services/cartService';
-import type { CartItem } from '~/types/types'; // Importa el tipo CartItem
+import { computed } from 'vue';
+import { useCartStore } from '~/stores/cart';
+import { createOrder as createOrderService } from '~/services/ordersService';
 
-const cart = ref<CartItem[]>([]); // Define el tipo explícito de cart
-const router = useRouter();
+const cartStore = useCartStore();
+cartStore.loadFromLocalStorage();
 
-const loadCart = async () => {
+const cartProducts = computed(() => cartStore.products);
+
+const removeFromCart = (productId: number) => {
+  cartStore.removeProduct(productId);
+};
+
+const createOrder = async () => {
   try {
-    cart.value = await getCart();
-  } catch (err) {
-    console.error("Error al cargar carrito:", err);
+    const productIds = cartStore.products.map((product) => product.id).join(',');
+    const order = {
+      orderDate: new Date().toISOString(),
+      status: "PENDIENTE",
+    };
+
+    await createOrderService(order, productIds);
+    alert('Pedido creado exitosamente.');
+    cartStore.clearCart();
+  } catch (error) {
+    console.error('Error al crear la orden:', error);
+    alert('Error al crear la orden: ');
   }
 };
-
-const handleRemoveFromCart = async (productId: number) => {
-  try {
-    await removeFromCart(productId);
-    cart.value = cart.value.filter(item => item.product.id !== productId);
-  } catch (err) {
-    console.error("Error al eliminar producto del carrito:", err);
-  }
-};
-
-const goToPay = () => {
-  router.push('/pay-cart');
-};
-
-onMounted(() => {
-  loadCart();
-});
-
- definePageMeta({
-    layout: 'client', // Usa el layout de cliente
-  });
 </script>
-
-<style scoped>
-/* Estilo adicional opcional */
-</style>

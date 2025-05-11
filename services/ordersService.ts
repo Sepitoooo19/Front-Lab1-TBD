@@ -16,17 +16,6 @@ export const getOrderById = async (id: number) => {
   return await response.json();
 };
 
-export const createOrder = async (order: any) => {
-  const response = await fetch(`${config.public.apiBase}/orders`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(order),
-  });
-  if (!response.ok) throw new Error("Error al crear la orden");
-  return await response.json();
-};
 
 export const updateOrder = async (id: number, order: any) => {
   const response = await fetch(`${config.public.apiBase}/orders/${id}`, {
@@ -145,23 +134,23 @@ export const getProductsByOrderId = async (orderId: number): Promise<Product[]> 
   return await response.json();
 };
 
-export const createOrderWithProducts = async (cartItems: CartItem[]): Promise<void> => {
-  const order = {
-    products: cartItems.map(item => ({
-      id: item.product.id,
-      quantity: item.quantity,
-    })),
-  };
+export const createOrder = async (order: { orderDate: string; status: string }, productIds: string): Promise<void> => {
+  const token = localStorage.getItem('token'); // Obtén el token del localStorage
 
-  const response = await fetch(`${config.public.apiBase}/orders`, {
-    method: "POST",
+  if (!token) {
+    throw new Error('No se encontró el token de autenticación');
+  }
+
+  const response = await fetch(`http://localhost:8090/orders/create?productIds=${productIds}`, {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`, // Incluye el token en el encabezado
     },
-    body: JSON.stringify(order),
+    body: JSON.stringify(order), // Enviar el cuerpo de la orden
   });
 
   if (!response.ok) {
-    throw new Error("Error al crear el pedido");
+    throw new Error('Error al crear el pedido');
   }
 };

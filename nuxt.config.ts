@@ -1,4 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
+import { createPinia } from 'pinia';
+
 export default defineNuxtConfig({
   ssr: false,
   css: ['~/assets/css/main.css'],
@@ -20,3 +23,7 @@ export default defineNuxtConfig({
     modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt'],
   pages: true // Habilita la detección automática de rutas en la carpeta "pages"
 })
+
+
+
+
