@@ -59,7 +59,7 @@ onMounted(async () => {
 
     // Filtrar órdenes sin asignar (dealerId null o undefined)
     unassignedOrders.value = orders.value.filter(order => 
-      !order.dealerId && order.status !== 'Entregado' && order.status !== 'Fallido'
+      !order.dealerId && order.status !== 'ENTREGADO' && order.status !== 'FALLIDA'
     );
 
   } catch (err) {

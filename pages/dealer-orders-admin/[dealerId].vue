@@ -73,10 +73,12 @@ definePageMeta({
               v-model="order.status"
               @change="updateOrderStatus(order.id, order.status)"
             >
-              <option value="Pendiente">Pendiente</option>
-              <option value="Entregado">Entregado</option>
-              <option value="Cancelado">Cancelado</option>
-              <option value="Devuelto">Devuelto</option>
+              <option value="PENDIENTE">Pendiente</option>
+              <option value="ENTREGADO">Entregado</option>
+              <option value="CANCELADO">Cancelado</option>
+              <option value="DEVUELTO">Devuelto</option>
+              <option value="FALLIDA">Fallido</option>
+              <option value="EN PROCESO">En Proceso</option>
             </select>
           </td>
         </tr>

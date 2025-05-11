@@ -58,12 +58,12 @@ const updateOrder = async (newStatus: string) => {
     const body: any = { status: newStatus };
     
     // Si es un fallo, asignamos null a la fecha de entrega
-    if (newStatus === 'Fallido') {
+    if (newStatus === 'FALLIDA') {
       body.deliveryDate = null;
     }
     
     await updateOrderStatus(order.value.id, body);
-    const successMessage = newStatus === 'Entregado' 
+    const successMessage = newStatus === 'ENTREGADO' 
       ? 'Orden entregada exitosamente.' 
       : 'La orden fue marcada como fallida.';
     alert(successMessage);
@@ -74,8 +74,8 @@ const updateOrder = async (newStatus: string) => {
   }
 };
 
-const deliverOrder = () => updateOrder('Entregado');
-const failOrder = () => updateOrder('Fallido');
+const deliverOrder = () => updateOrder('ENTREGADO');
+const failOrder = () => updateOrder('FALLIDA');
 
 onMounted(() => {
   loadActiveOrder();

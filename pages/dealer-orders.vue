@@ -23,10 +23,10 @@ definePageMeta({
 
 // Función para formatear la fecha de entrega
 const formatDeliveryDate = (order: Order) => {
-  if (order.status === 'Fallido') {
+  if (order.status === 'FALLIDA') {
     return 'No se pudo entregar';
   }
-  return order.deliveryDate ? new Date(order.deliveryDate).toLocaleString() : 'En proceso';
+  return order.deliveryDate ? new Date(order.deliveryDate).toLocaleString() : 'EN PROCESO';
 };
 </script>
 
