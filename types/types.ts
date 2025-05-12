@@ -16,7 +16,8 @@ export interface Order {
   products: number
   clientId: number
   nameClient: string
-  dealerId: Dealer
+  dealerId: number
+  dealerName: string
   totalPrice: number
 }
 

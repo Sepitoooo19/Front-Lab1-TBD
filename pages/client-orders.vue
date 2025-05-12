@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue';
 import type { Order, Product, OrderDetails } from '~/types/types';
 import { getOrdersByClient, getProductsByOrderId, getClientAddress } from '~/services/ordersService';
 import { getOrderDetailsByOrderId } from '~/services/orderDetailsService';
+import { getDealerNameById } from '~/services/dealerService'; // Servicio para obtener el nombre del repartidor
 
 const orders = ref<Order[]>([]); // Lista de órdenes del cliente
 const products = ref<Product[]>([]); // Lista de productos de la orden seleccionada
@@ -17,13 +18,21 @@ const loadOrders = async () => {
     const address = await getClientAddress(); // Obtén la dirección del cliente
     const ordersData: Order[] = await getOrdersByClient(); // Tipifica explícitamente
 
-    // Agrega la dirección a cada orden
-    orders.value = ordersData.map((order: Order) => ({
-      ...order,
-      address, // Agrega la dirección a cada orden
-    }));
+    // Agrega la dirección y el nombre del repartidor a cada orden
+    for (const order of ordersData) {
+      order.address = address; // Agrega la dirección a cada orden
+
+      // Verifica si dealerId es válido antes de llamar al servicio
+      if (order.dealerId) {
+        order.dealerName = await getDealerNameById(order.dealerId); // Obtén el nombre del repartidor
+      } else {
+        order.dealerName = "Sin asignar"; // Si no hay dealerId, asigna "Sin asignar"
+      }
+    }
+
+    orders.value = ordersData;
   } catch (err) {
-    console.error('Error al cargar órdenes o dirección:', err);
+    console.error("Error al cargar órdenes o dirección:", err);
   }
 };
 
@@ -86,52 +95,59 @@ definePageMeta({
 });
 </script>
 
-
 <template>
   <div class="p-6">
     <h1 class="text-2xl font-bold mb-4">Mis Órdenes</h1>
 
     <table class="min-w-full border border-gray-300 shadow-md rounded-lg overflow-hidden">
       <thead class="bg-gray-100">
-  <tr>
-    <th class="px-4 py-2 text-left">ID</th>
-    <th class="px-4 py-2 text-left">Fecha de Orden</th>
-    <th class="px-4 py-2 text-left">Fecha de Entrega</th>
-    <th class="px-4 py-2 text-left">Estado</th>
-    <th class="px-4 py-2 text-left">Dirección</th> <!-- Nueva columna -->
-    <th class="px-4 py-2 text-left">Productos</th>
-    <th class="px-4 py-2 text-left">Precio Total</th>
-    <th class="px-4 py-2 text-left">Acción</th>
-  </tr>
-</thead>
-<tbody>
-  <tr v-for="order in orders" :key="order.id" class="border-t">
-    <td class="px-4 py-2">{{ order.id }}</td>
-    <td class="px-4 py-2">{{ formatDate(order.orderDate) }}</td>
-    <td class="px-4 py-2">{{ formatDate(order.deliveryDate) }}</td>
-    <td class="px-4 py-2">{{ order.status }}</td>
-    <td class="px-4 py-2">{{ order.address }}</td> <!-- Nueva celda -->
-    <td class="px-4 py-2">
-      <button
-        @click="viewProducts(order.id)"
-        class="bg-blue-500 text-white px-3 py-1 rounded"
-      >
-        Ver Productos
-      </button>
-    </td>
-    <td class="px-4 py-2">
-      ${{ order.totalPrice !== undefined && order.totalPrice !== null ? order.totalPrice.toFixed(2) : '0.00' }}
-    </td>
-    <td class="px-4 py-2">
-      <button
-        @click="viewOrderDetails(order.id)"
-        class="bg-green-500 text-white px-3 py-1 rounded"
-      >
-        Ver Detalles
-      </button>
-    </td>
-  </tr>
-</tbody>
+        <tr>
+          <th class="px-4 py-2 text-left">ID</th>
+          <th class="px-4 py-2 text-left">Fecha de Orden</th>
+          <th class="px-4 py-2 text-left">Fecha de Entrega</th>
+          <th class="px-4 py-2 text-left">Estado</th>
+          <th class="px-4 py-2 text-left">Dirección</th>
+          <th class="px-4 py-2 text-left">Repartidor</th> <!-- Nueva columna -->
+          <th class="px-4 py-2 text-left">Productos</th>
+          <th class="px-4 py-2 text-left">Precio Total</th>
+          <th class="px-4 py-2 text-left">Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="order in orders" :key="order.id" class="border-t">
+          <td class="px-4 py-2">{{ order.id }}</td>
+          <td class="px-4 py-2">{{ formatDate(order.orderDate) }}</td>
+          <td class="px-4 py-2">{{ formatDate(order.deliveryDate) }}</td>
+          <td class="px-4 py-2">{{ order.status }}</td>
+          <td class="px-4 py-2">{{ order.address }}</td>
+          <td class="px-4 py-2">{{ order.dealerName }}</td> <!-- Nueva celda -->
+          <td class="px-4 py-2">
+            <button
+              @click="viewProducts(order.id)"
+              class="bg-blue-500 text-white px-3 py-1 rounded"
+            >
+              Ver Productos
+            </button>
+          </td>
+          <td class="px-4 py-2">
+            ${{ order.totalPrice !== undefined && order.totalPrice !== null ? order.totalPrice.toFixed(2) : '0.00' }}
+          </td>
+          <td class="px-4 py-2">
+            <button
+              @click="viewOrderDetails(order.id)"
+              class="bg-green-500 text-white px-3 py-1 rounded mb-2"
+            >
+              Ver Detalles
+            </button>
+            <button
+              @click="$router.push({ path: '/rate-dealer', query: { dealerId: order.dealerId, orderId: order.id, clientId: order.clientId } })"
+              class="bg-yellow-500 text-white px-3 py-1 rounded mt-2 hover:bg-yellow-600"
+            >
+              Calificar Repartidor
+            </button>
+          </td>
+        </tr>
+      </tbody>
     </table>
 
     <div v-if="orders.length === 0" class="mt-4 text-gray-500">

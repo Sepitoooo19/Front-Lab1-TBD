@@ -3,6 +3,7 @@
 import { ref, onMounted } from 'vue';
 import { getAllOrders } from '~/services/ordersService'; // Importa el servicio para obtener las órdenes
 import { getNameByClientId } from '~/services/clientService'; // Importa el servicio para obtener el nombre del cliente
+import { getDealerNameById } from '~/services/dealerService';
 import type { Order } from '~/types/types'; // Importa la interfaz Order
 
 const orders = ref<Order[]>([]); // Lista de órdenes
@@ -17,24 +18,32 @@ onMounted(async () => {
   try {
     const ordersData: Order[] = await getAllOrders(); // Obtén todas las órdenes
 
-    // Itera sobre las órdenes y agrega el nombre del cliente
-    const ordersWithClientNames = await Promise.all(
+    // Itera sobre las órdenes y agrega el nombre del cliente y del repartidor
+    const ordersWithNames = await Promise.all(
       ordersData.map(async (order: Order) => {
         try {
-          const clientName = await getNameByClientId(order.clientId); // Obtén el nombre del cliente
-          return { ...order, nameClient: clientName }; // Asigna el nombre del cliente al campo nameClient
+          // Obtén el nombre del cliente
+          const clientName = await getNameByClientId(order.clientId);
+
+          // Obtén el nombre del repartidor o asigna "Sin asignar" si dealerId es null
+          const dealerName = order.dealerId
+            ? await getDealerNameById(order.dealerId)
+            : "Sin asignar";
+
+          return { ...order, nameClient: clientName, dealerName }; // Asigna los nombres al pedido
         } catch (err) {
-          console.error(`Error al obtener el nombre del cliente con ID ${order.clientId}:`, err);
-          return { ...order, nameClient: "Desconocido" }; // Valor predeterminado en caso de error
+          console.error(`Error al procesar la orden con ID ${order.id}:`, err);
+          return { ...order, nameClient: "Desconocido", dealerName: "Sin asignar" }; // Valores predeterminados en caso de error
         }
       })
     );
 
-    orders.value = ordersWithClientNames; // Asigna las órdenes con los nombres de los clientes
+    orders.value = ordersWithNames; // Asigna las órdenes con los nombres
   } catch (err) {
     console.error("Error al cargar las órdenes:", err);
   }
 });
+
 definePageMeta({
     layout: 'admin',
     middleware: 'auth-role'
@@ -65,7 +74,7 @@ definePageMeta({
           <td class="px-4 py-2">{{ order.clientId }}</td> <!-- ID del cliente -->
           <td class="px-4 py-2">{{ order.nameClient }}</td> <!-- Muestra el nombre del cliente -->
           <td class="px-4 py-2">{{ order.dealerId }}</td>
-          <td class="px-4 py-2">{{ order.dealerId.name }}</td>
+          <td class="px-4 py-2">{{ order.dealerName }}</td>
           <td class="px-4 py-2">{{ formatDate(order.orderDate) }}</td>
           <td class="px-4 py-2">{{ formatDate(order.deliveryDate) }}</td>
           <td class="px-4 py-2">{{ order.status }}</td>

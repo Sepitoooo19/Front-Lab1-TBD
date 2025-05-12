@@ -43,3 +43,40 @@ export const deleteDealerById = async (id: number) => {
   if (!response.ok) throw new Error("Error al eliminar el dealer");
   return true;
 };
+
+export const getDealerNameById = async (dealerId: number | null): Promise<string> => {
+  if (dealerId === null) {
+    return 'Sin asignar'; // Si el dealerId es null, devuelve "Sin asignar"
+  }
+
+  const config = useRuntimeConfig();
+  const response = await fetch(`${config.public.apiBase}/dealers/${dealerId}/name`);
+
+  if (!response.ok) {
+    throw new Error('Error al obtener el nombre del repartidor');
+  }
+
+  return await response.text();
+};
+
+export const getAverageDeliveryTimeByDealer = async (): Promise<any[]> => {
+  const config = useRuntimeConfig();
+  const response = await fetch(`${config.public.apiBase}/dealers/average-delivery-time`);
+
+  if (!response.ok) {
+    throw new Error('Error al obtener el tiempo promedio de entrega por repartidor');
+  }
+
+  return await response.json();
+};
+
+export const getTopPerformingDealers = async (): Promise<any[]> => {
+  const config = useRuntimeConfig();
+  const response = await fetch(`${config.public.apiBase}/dealers/top-performers`);
+
+  if (!response.ok) {
+    throw new Error('Error al obtener los repartidores con mejor rendimiento');
+  }
+
+  return await response.json();
+};
