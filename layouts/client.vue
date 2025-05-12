@@ -9,6 +9,7 @@
         <!-- Menú de navegación -->
         <ul class="flex space-x-4">
           <li><a href="/home-client" class="hover:underline">Inicio</a></li>
+          <li><a href="/notifications" class="hover:underline">Notificaciones</a></li>
           <li><a href="/client-order" class="hover:underline">Realizar pedido</a></li>
           <li><a href="/client-orders" class="hover:underline">Mis Pedidos</a></li>
           <li><a href="/client-cart" class="hover:underline">Carrito</a></li>

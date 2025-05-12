@@ -390,3 +390,26 @@ export const getActiveOrderNameAddresDTOByDealer = async (): Promise<OrderNameAd
 
   return await response.json();
 };
+
+export const getFailedOrdersByClient = async (): Promise<Order[]> => {
+  const config = useRuntimeConfig();
+  const token = localStorage.getItem('token');
+
+  if (!token) {
+    throw new Error('No se encontró el token de autenticación');
+  }
+
+  const response = await fetch(`${config.public.apiBase}/orders/client/failed`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error('Error al obtener órdenes fallidas del cliente');
+  }
+
+  return await response.json();
+};

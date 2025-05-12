@@ -51,13 +51,24 @@ const updateOrder = async (newStatus: string) => {
   }
 };
 
-// Funciones para manejar los botones de entrega y fallo
+// Funciones para manejar los botones de entrega y fallo, con validacion
 // Metodo: updateOrder
 // Entrada: Status
 // Salida: successMessage
 // Descripción: Estas funciones manejan la lógica de los botones "Entregar" y "Emergencia" respectivamente.
-const deliverOrder = () => updateOrder('ENTREGADO');
-const failOrder = () => updateOrder('FALLIDA');
+const deliverOrder = () => {
+  const confirmed = confirm("¿Estás seguro de que deseas marcar la orden como ENTREGADA?");
+  if (confirmed) {
+    updateOrder('ENTREGADO');
+  }
+};
+
+const failOrder = () => {
+  const confirmed = confirm("¿Estás seguro de que deseas marcar la orden como FALLIDA?");
+  if (confirmed) {
+    updateOrder('FALLIDA');
+  }
+};
 
 onMounted(() => {
   loadActiveOrder();
