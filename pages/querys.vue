@@ -1,16 +1,13 @@
-<!-- page para mostrar las consultas complejas solicitadas-->
-
 <script setup lang="ts">
-// Importaciones necesarias
 import { ref } from 'vue';
 import { getTopSpender } from '~/services/ordersService';
 import { getTopProductsByCategoryForLastMonth } from '~/services/productService';
 import { getCompaniesWithMostFailedDeliveries } from '~/services/companyService';
 import { getMostUsedPaymentMethodForUrgentOrders } from '~/services/orderDetailsService';
 import { getAverageDeliveryTimeByDealer, getTopPerformingDealers } from '~/services/dealerService'; // Importa el nuevo servicio
+
 import type { TopSpender } from '~/types/types';
 
-// constantes para almacenar los datos de las consultas
 const topSpender = ref<TopSpender | null>(null);
 const topProducts = ref<any[]>([]); // Lista de productos más pedidos
 const companiesWithMostFailedDeliveries = ref<any[]>([]); // Lista de empresas con más entregas fallidas
@@ -21,10 +18,6 @@ const topPerformingDealers = ref<any[]>([]); // Lista de los 3 mejores repartido
 const errorMessage = ref<string | null>(null);
 
 // Función para obtener el Cliente con Mayor Gasto
-// Método: getTopSpender
-// Entrada: token (localStorage)
-// Salida: topSpender
-// Descripción: Esta función obtiene el cliente con mayor gasto y lo asigna a la variable 'topSpender'.
 const fetchTopSpender = async () => {
   try {
     errorMessage.value = null;
@@ -37,10 +30,6 @@ const fetchTopSpender = async () => {
 };
 
 // Función para obtener los Productos Más Pedidos por Categoría
-// Metodo: getTopProductsByCategoryForLastMonth
-// Entrada: token (localStorage)
-// Salida: topProducts
-// Descripción: Esta función obtiene los productos más pedidos por categoría en el último mes y los asigna a la variable 'topProducts'.
 const fetchTopProducts = async () => {
   try {
     errorMessage.value = null;
@@ -53,10 +42,6 @@ const fetchTopProducts = async () => {
 };
 
 // Función para obtener las Empresas con Más Entregas Fallidas
-// Metodo: getCompaniesWithMostFailedDeliveries
-// Entrada: token (localStorage)
-// Salida: companiesWithMostFailedDeliveries
-// Descripción: Esta función obtiene las empresas con más entregas fallidas y las asigna a la variable 'companiesWithMostFailedDeliveries'.
 const fetchCompaniesWithMostFailedDeliveries = async () => {
   try {
     errorMessage.value = null;
@@ -69,10 +54,6 @@ const fetchCompaniesWithMostFailedDeliveries = async () => {
 };
 
 // Función para obtener el Método de Pago Más Utilizado en Pedidos Urgentes
-// Metodo: getMostUsedPaymentMethodForUrgentOrders
-// Entrada: token (localStorage)
-// Salida: mostUsedPaymentMethod
-// Descripción: Esta función obtiene el método de pago más utilizado en pedidos urgentes y lo asigna a la variable 'mostUsedPaymentMethod'.
 const fetchMostUsedPaymentMethod = async () => {
   try {
     errorMessage.value = null;
@@ -85,10 +66,6 @@ const fetchMostUsedPaymentMethod = async () => {
 };
 
 // Función para obtener el Tiempo Promedio de Entrega por Repartidor
-// Metodo: getAverageDeliveryTimeByDealer
-// Entrada: token (localStorage)
-// Salida: averageDeliveryTimes
-// Descripción: Esta función obtiene el tiempo promedio de entrega por repartidor y lo asigna a la variable 'averageDeliveryTimes'.
 const fetchAverageDeliveryTimeByDealer = async () => {
   try {
     errorMessage.value = null;
@@ -101,10 +78,6 @@ const fetchAverageDeliveryTimeByDealer = async () => {
 };
 
 // Función para obtener los 3 Repartidores con Mejor Rendimiento
-// Metodo: getTopPerformingDealers
-// Entrada: token (localStorage)
-// Salida: topPerformingDealers
-// Descripción: Esta función obtiene los 3 repartidores con mejor rendimiento y los asigna a la variable 'topPerformingDealers'.
 const fetchTopPerformingDealers = async () => {
   try {
     errorMessage.value = null;
@@ -121,8 +94,6 @@ definePageMeta({
   middleware: 'auth-role'
 });
 </script>
-
-<!-- Template que contiene los cuadros de las consultas y botones para ejecutarlas-->
 
 <template>
   <div class="p-6">

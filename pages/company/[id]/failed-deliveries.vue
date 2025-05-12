@@ -1,21 +1,15 @@
-<!-- Productos fallidos de la empresa por id para el admin -->
 
 <script setup>
-// Importa las dependencias necesarias
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { getFailedDeliveriesByCompanyId } from '~/services/ordersService'; // Importa el servicio para obtener las entregas fallidas
 
-// Define las variables reactivas
 const route = useRoute();
 const companyId = route.params.id; // Obtiene el parámetro de la ruta
 const failedOrders = ref([]); // Lista de entregas fallidas
 const error = ref(null); // Manejo de errores
 
 // Obtén las entregas fallidas al montar el componente
-// Metodo: getFailedDeliveriesByCompanyId
-// Entrada: companyId (ID de la empresa)
-// Salida: failedOrders (Lista de entregas fallidas) y error (Manejo de errores)
 onMounted(async () => {
   try {
     failedOrders.value = await getFailedDeliveriesByCompanyId(companyId);
@@ -29,8 +23,6 @@ onMounted(async () => {
     layout: 'admin', // Usa el layout de administrador
   });
 </script>
-
-<!-- Este template muestra una tabla con las entregas fallidas de la empresa -->
 
 <template>
   <div>

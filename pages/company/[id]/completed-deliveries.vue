@@ -1,27 +1,22 @@
-<!-- Lista de entregas completadas de la empresa por id para el admin -->
+
 
 <script setup>
-// Importa las dependencias necesarias
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { getDeliveredOrdersByCompanyId } from '~/services/ordersService'; // Importa el servicio para obtener las entregas 
+import { getDeliveredOrdersByCompanyId } from '~/services/ordersService'; // Importa el servicio para obtener las entregas fallidas
 
-// Define las variables reactivas
 const route = useRoute();
 const companyId = route.params.id; // Obtiene el parámetro de la ruta
-const orders = ref([]); // Lista de entregas 
+const failedOrders = ref([]); // Lista de entregas fallidas
 const error = ref(null); // Manejo de errores
 
-// Obtén las entregas al montar el componente
-// Metodo: getDeliveredOrdersByCompanyId
-// Entrada: companyId (ID de la empresa)
-// Salida: orders (Lista de entregas) y error (Manejo de errores)
+// Obtén las entregas fallidas al montar el componente
 onMounted(async () => {
   try {
-    orders.value = await getDeliveredOrdersByCompanyId(companyId);
+    failedOrders.value = await getDeliveredOrdersByCompanyId(companyId);
   } catch (err) {
     console.error('Error al obtener las entregas completadas:', err);
-    error.value = 'No se pudieron cargar las entregas.';
+    error.value = 'No se pudieron cargar las entregas fallidas.';
   }
 });
 
@@ -29,8 +24,6 @@ onMounted(async () => {
     layout: 'admin', // Usa el layout de administrador
   });
 </script>
-
-<!-- Este template muestra una tabla con las entregas completadas de la empresa -->
 
 <template>
   <div>
@@ -49,7 +42,7 @@ onMounted(async () => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="order in orders" :key="order.id" class="hover:bg-gray-50">
+        <tr v-for="order in failedOrders" :key="order.id" class="hover:bg-gray-50">
           <td class="px-4 py-2">{{ order.id }}</td>
           <td class="px-4 py-2">{{ order.orderDate }}</td>
           <td class="px-4 py-2">{{ order.deliveryDate }}</td>
@@ -59,7 +52,7 @@ onMounted(async () => {
           <td class="px-4 py-2">{{ order.dealerId.name }}</td>
           <td class="px-4 py-2">{{ order.totalPrice }}</td>
         </tr>
-        <tr v-if="orders.length === 0">
+        <tr v-if="failedOrders.length === 0">
           <td colspan="8" class="px-4 py-2 text-center text-gray-500">No se encontraron entregas fallidas para esta empresa.</td>
         </tr>
       </tbody>

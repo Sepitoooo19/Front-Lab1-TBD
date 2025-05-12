@@ -1,17 +1,11 @@
-<!-- pagina que muestra las empresas con mayor volumen de comida entregada-->
-
 <script setup lang="ts">
-// Importaciones necesarias
 import { ref, onMounted } from 'vue';
 import { getCompaniesByDeliveredFoodVolume } from '~/services/companyService'; // Servicio para obtener las empresas por volumen de comida entregada
-// Importa el servicio y tipos necesarios
+
 const companiesByDeliveredFoodVolume = ref<any[]>([]); // Lista de empresas con mayor volumen de comida entregada
 const errorMessage = ref<string | null>(null);
 
 // Función para cargar las empresas con mayor volumen de comida entregada
-// Metodo: getCompaniesByDeliveredFoodVolume
-// Entrada: token (localStorage)
-// Salida: companiesByDeliveredFoodVolume
 const fetchCompaniesByDeliveredFoodVolume = async () => {
   try {
     errorMessage.value = null;
@@ -30,7 +24,6 @@ definePageMeta({
 });
 </script>
 
-<!-- Template para mostrar las empresas con mayor volumen de comida entregada -->
 
 <template>
   <div class="p-6">

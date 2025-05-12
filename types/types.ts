@@ -19,7 +19,6 @@ export interface Order {
   dealerId: number
   dealerName: string
   totalPrice: number
-  totalProducts: number
 }
 
 export interface Dealer {
@@ -74,24 +73,3 @@ export interface TopSpender{
 
 }
 
-export interface OrderTotalProductsDTO{
-  id: number
-     orderDate: string;
-     deliveryDate: string;
-     status: string;
-     totalPrice: number;
-    totalProducts: number;
-
-}
-
-
-export interface OrderNameAddressDTO {
-   id: number;
-      orderDate: string;
-      deliveryDate: string;
-      status: string;
-      totalPrice: number;
-      clientId: number;
-      nameClient: string // Nombre del cliente
-      address: string // Dirección del cliente
-}

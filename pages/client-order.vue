@@ -1,21 +1,14 @@
-<!-- page que muestra las empresas disponibles para el cliente y pedir una orden -->
+
 
 <script setup lang="ts">
-// Importaciones necesarias
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { getAllCompanies } from '~/services/companyService';
 import type { Company } from '~/types/types';
 
-// Const reactivos
 const companies = ref<Company[]>([]); // Se especifica el tipo explícitamente
 const router = useRouter();
 
-// Función para cargar las empresas
-// Metodo: getAllCompanies
-// Entrada: token (localStorage)
-// Salida: companies
-// Descripción: Esta función obtiene todas las empresas y las asigna a la variable 'companies'.
 const loadCompanies = async () => {
   try {
     companies.value = await getAllCompanies();
@@ -24,11 +17,6 @@ const loadCompanies = async () => {
   }
 };
 
-// Función para redirigir a la página de productos de una empresa
-// Metodo: router.push
-// Entrada: companyId
-// Salida: void
-// Descripción: Esta función redirige al usuario a la página de productos de la empresa seleccionada.
 const goToProducts = (companyId: number) => {
   router.push(`/company/${companyId}/products-client`);
 };
@@ -42,7 +30,9 @@ onMounted(() => {
   });
 </script>
 
-<!-- Template para mostrar las empresas disponibles y un botón para ver sus productos -->
+<style scoped>
+/* Estilo adicional opcional */
+</style>
 
 <template>
   <div>
@@ -72,6 +62,3 @@ onMounted(() => {
     </table>
   </div>
 </template>
-
-<style scoped>
-</style>

@@ -1,19 +1,12 @@
-<!-- page para mostrar los dealers en vista de admin-->
-
 <script setup lang="ts">
-// Importaciones necesarias
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { getAllDealers, deleteDealerById } from '~/services/dealerService';
 import type { Dealer } from '~/types/types';
-// Importa el servicio y el tipo Dealer
+
 const router = useRouter();
 const dealers = ref<Dealer[]>([]);
 
-// Carga todos los dealers al montar el componente
-// Metodo: getAllDealers
-// Entrada: token (localStorage)
-// Salida: dealers
 onMounted(async () => {
   try {
     dealers.value = await getAllDealers();
@@ -22,20 +15,14 @@ onMounted(async () => {
   }
 });
 
-// Funcion de redirección a la página de creación de dealer
 const createDealer = () => {
   router.push('/dealers/create'); // Ruta para crear un dealer
 };
 
-// Funcion de redirección a la página de edición de dealer
 const editDealer = (dealer: Dealer) => {
   router.push(`/dealers/${dealer.id}/edit`); // Ruta para editar dealer
 };
 
-// Función para eliminar un dealer y refrescar la lista
-// Metodo: deleteDealerById y getAllDealers
-// Entrada: dealerId
-// Salida: dealers (lista actualizada)
 const deleteDealer = async (dealerId: number) => {
   const confirmDelete = confirm('¿Estás seguro que deseas eliminar este dealer?');
   if (confirmDelete) {
@@ -48,7 +35,6 @@ const deleteDealer = async (dealerId: number) => {
   }
 };
 
-// Función de redirección a la página de órdenes de un dealer
 const viewOrders = (dealerId: number) => {
   router.push(`/dealer-orders-admin/${dealerId}`); // Nueva ruta
 };
@@ -57,8 +43,6 @@ definePageMeta({
   layout: 'admin', // Usa el layout de repartidor
 });
 </script>
-
-<!-- Template para mostrar los dealers en vista de admin -->
 
 <template>
   <div class="p-6">

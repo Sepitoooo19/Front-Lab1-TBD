@@ -1,7 +1,6 @@
-<!-- Page para el carrito del cliente -->
+
 
 <script setup lang="ts">
-// Importaciones necesarias
 import { ref, computed, onMounted } from 'vue';
 import { useCartStore } from '~/stores/cart';
 import { createOrder as createOrderService } from '~/services/ordersService';
@@ -10,30 +9,19 @@ import { getCompanyIdByProductId } from '~/services/productService';
 import { getPaymentMethodByCompanyId } from '~/services/paymentMethodService';
 import type { PaymentMethod } from '~/types/types';
 
-// Importa el store del carrito local
 const cartStore = useCartStore();
 cartStore.loadFromLocalStorage();
 
-// Const reactivos
 const cartProducts = computed(() => cartStore.products);
 const paymentMethods = ref<PaymentMethod[]>([]); // Lista de métodos de pago
 const selectedPaymentMethod = ref<string | null>(null); // Método de pago seleccionado
 const isUrgent = ref<boolean>(false); // Estado para marcar como URGENTE
 const errorMessage = ref<string | null>(null);
 
-// Función para eliminar un producto del carrito
-// Metodo: removeFromCart
-// Entrada: productId
-// Salida: void
 const removeFromCart = (productId: number) => {
   cartStore.removeProduct(productId);
 };
 
-// Función para obtener el ID de la empresa por el ID del producto
-// Metodo: getCompanyIdByProductId y getPaymentMethodByCompanyId
-// Entrada: productId y companyId
-// Salida: companyId y paymentMethods
-// Descripción: Esta función obtiene el ID de la empresa asociada al primer producto del carrito y luego obtiene los métodos de pago disponibles para esa empresa.
 onMounted(async () => {
   try {
     if (cartProducts.value.length === 0) {
@@ -52,11 +40,6 @@ onMounted(async () => {
   }
 });
 
-// Función para crear la orden y los detalles
-// Metodo: createOrderService y createOrderDetailsForLastOrder
-// Entrada: order y productIds
-// Salida: successMessage
-// Descripción: Esta función crea una orden y sus detalles. Muestra errores si no se selecciona un método de pago o si ocurre un error al crear la orden.
 const createOrder = async () => {
   try {
     if (!selectedPaymentMethod.value) {
@@ -92,8 +75,6 @@ definePageMeta({
   layout: 'client', // Usa el layout de cliente
 });
 </script>
-
-<!-- Template para el carrito del cliente, la tabla de productos y el formulario de pago -->
 
 <template>
   <div class="p-6">

@@ -1,23 +1,16 @@
-<!-- page para mostrar los clientes en vista de admin -->
-
 <script setup lang="ts">
-// Importaciones necesarias
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { getAllClients, deleteClientById } from '~/services/clientService';
 import { getOrdersByClientId } from '~/services/ordersService';
 import type { Client, Order } from '~/types/types';
-// Importa los servicios y tipos necesarios
+
 const router = useRouter();
 const clients = ref<Client[]>([]);
 const orders = ref<Order[]>([]); // Lista de órdenes del cliente seleccionado
 const isOrdersModalOpen = ref(false); // Estado del modal
 const selectedClientName = ref(''); // Nombre del cliente seleccionado
 
-// Funcion que obtiene los clientes
-// Metodo: getAllClients
-// Entrada: void
-// Salida: clients
 onMounted(async () => {
   try {
     clients.value = await getAllClients();
@@ -26,19 +19,14 @@ onMounted(async () => {
   }
 });
 
-// Funciones para manejar las acciones de los botones
-// Función para crear un nuevo cliente
 const createClient = () => {
   router.push('/clients/create'); // Ruta para crear un cliente
 };
 
-// Función para editar un cliente
 const editClient = (client: Client) => {
   router.push(`/clients/${client.id}/edit`); // Ruta para editar cliente
 };
 
-// Función para eliminar un cliente y refrescar la lista
-// Metodo: deleteClientById y getAllClients
 const deleteClient = async (clientId: number) => {
   const confirmDelete = confirm('¿Estás seguro que deseas eliminar este cliente?');
   if (confirmDelete) {
@@ -51,10 +39,6 @@ const deleteClient = async (clientId: number) => {
   }
 };
 
-// Función para ver las órdenes de un cliente
-// Metodo: getOrdersByClientId
-// Entrada: clientId
-// Salida: orders
 const viewOrders = async (clientId: number, clientName: string) => {
   try {
     orders.value = await getOrdersByClientId(clientId); // Obtiene las órdenes del cliente
@@ -65,10 +49,6 @@ const viewOrders = async (clientId: number, clientName: string) => {
   }
 };
 
-// Función para cerrar el modal de órdenes
-// Metodo: closeOrdersModal
-// Entrada: void
-// Salida: void
 const closeOrdersModal = () => {
   isOrdersModalOpen.value = false; // Cierra el modal
   orders.value = []; // Limpia las órdenes
@@ -78,8 +58,6 @@ const closeOrdersModal = () => {
     layout: 'admin', // Usa el layout de administrador
   });
 </script>
-
-<!-- Template para mostrar los clientes en vista de admin -->
 
 <template>
   <div class="p-6">

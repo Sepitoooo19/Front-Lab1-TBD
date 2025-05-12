@@ -1,4 +1,4 @@
-<!-- pagina principal del repartidor-->
+
   <script setup>
   definePageMeta({
     layout: 'dealer',

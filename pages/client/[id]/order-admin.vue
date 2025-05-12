@@ -1,12 +1,8 @@
-<!-- Componente para administrar las órdenes del cliente -->
-
 <script setup lang="ts">
-// Importa las dependencias necesarias
-import { onMounted, ref } from 'vue'; 
-import type { Order, Product } from '~/types/types'; 
-import { getOrdersByClientId, getProductsByOrderId } from '~/services/ordersService'; 
+import { onMounted, ref } from 'vue';
+import type { Order, Product } from '~/types/types';
+import { getOrdersByClientId, getProductsByOrderId } from '~/services/ordersService';
 
-// Define las variables reactivas
 const orders = ref<Order[]>([]); // Lista de órdenes del cliente
 const products = ref<Product[]>([]); // Productos de una orden específica
 const showModal = ref(false); // Controla la visibilidad del modal
@@ -14,9 +10,6 @@ const selectedOrderId = ref<number | null>(null); // ID del pedido seleccionado
 const selectedClientId = ref<number | null>(null);
 
 // Carga las órdenes del cliente especificado
-// Metodo: getOrdersByClientId
-// Entrada: clientId (ID del cliente)
-// Salida: orders (lista de órdenes del cliente)
 const loadOrders = async (clientId: number) => {
   try {
     orders.value = await getOrdersByClientId(clientId);
@@ -27,16 +20,11 @@ const loadOrders = async (clientId: number) => {
 };
 
 // Formatea las fechas para mostrarlas en la tabla
-// Entrada: dateStr (cadena de fecha)
-// Salida: fecha formateada
 const formatDate = (dateStr: string) => {
   return new Date(dateStr).toLocaleDateString();
 };
 
 // Muestra los productos de una orden específica en un modal
-// Metodo: getProductsByOrderId
-// Entrada: orderId (ID del pedido)
-// Salida: products (lista de productos de la orden)
 const viewProducts = async (orderId: number) => {
   try {
     selectedOrderId.value = orderId; // Guarda el ID del pedido seleccionado
@@ -47,13 +35,11 @@ const viewProducts = async (orderId: number) => {
   }
 };
 
-// Define el layout de la página
 definePageMeta({
   layout: 'admin', // Usa el layout de administrador
 });
 </script>
 
-<!-- Este template muestra una tabla con las órdenes del cliente -->
 <template>
   <div class="p-6">
     <h1 class="text-2xl font-bold mb-4">

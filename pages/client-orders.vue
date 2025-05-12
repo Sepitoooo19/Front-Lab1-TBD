@@ -1,14 +1,10 @@
-<!-- page para mostrar las órdenes del cliente y calificar el repartidor -->
-
 <script setup lang="ts">
-// Importa los módulos necesarios
 import { onMounted, ref } from 'vue';
 import type { Order, Product, OrderDetails } from '~/types/types';
 import { getOrdersByClient, getProductsByOrderId, getClientAddress } from '~/services/ordersService';
 import { getOrderDetailsByOrderId } from '~/services/orderDetailsService';
 import { getDealerNameById } from '~/services/dealerService'; // Servicio para obtener el nombre del repartidor
 
-// Importa los servicios necesarios
 const orders = ref<Order[]>([]); // Lista de órdenes del cliente
 const products = ref<Product[]>([]); // Lista de productos de la orden seleccionada
 const orderDetails = ref<OrderDetails | null>(null); // Detalles de la orden seleccionada
@@ -17,10 +13,6 @@ const showDetailsModal = ref(false); // Controla la visibilidad del modal de det
 const selectedOrderId = ref<number | null>(null); // ID del pedido seleccionado
 
 // Carga las órdenes del cliente autenticado
-// Método: getOClientAddress, getOrdersByClient y getDealerNameById
-// Entrada: dealerId (en getDealerNameById)
-// Salida: orders (lista de órdenes), address (dirección del cliente), dealerName (nombre del repartidor)
-// Descripción: Esta función carga las órdenes del cliente autenticado, obtiene la dirección del cliente y el nombre del repartidor para cada orden.
 const loadOrders = async () => {
   try {
     const address = await getClientAddress(); // Obtén la dirección del cliente
@@ -44,9 +36,6 @@ const loadOrders = async () => {
   }
 };
 
-// Formatea la fecha para mostrarla en un formato legible
-// Entrada: dateStr (cadena de fecha)
-// Salida: fecha formateada
 const formatDate = (dateStr: string | null | undefined) => {
   if (!dateStr) {
     return 'Fecha no disponible'; // Valor predeterminado para fechas no válidas
@@ -61,9 +50,6 @@ const formatDate = (dateStr: string | null | undefined) => {
 };
 
 // Muestra los productos de una orden
-// Método: getProductsByOrderId
-// Entrada: orderId (ID de la orden)
-// Salida: products (lista de productos)
 const viewProducts = async (orderId: number) => {
   try {
     selectedOrderId.value = orderId; // Guarda el ID del pedido seleccionado
@@ -74,10 +60,6 @@ const viewProducts = async (orderId: number) => {
   }
 };
 
-// Muestra los detalles de una orden
-// Método: getOrderDetailsByOrderId
-// Entrada: orderId (ID de la orden)
-// Salida: orderDetails (detalles de la orden)
 const viewOrderDetails = async (orderId: number) => {
   try {
     selectedOrderId.value = orderId; // Guarda el ID del pedido seleccionado
@@ -113,7 +95,6 @@ definePageMeta({
 });
 </script>
 
-<!-- este template muestra una tabla con las órdenes del cliente, permite ver los detalles y calificar el repartidor -->
 <template>
   <div class="p-6">
     <h1 class="text-2xl font-bold mb-4">Mis Órdenes</h1>

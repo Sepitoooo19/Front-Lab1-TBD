@@ -1,7 +1,4 @@
-<!-- pagina que muestra las empresas en vista de admin-->
-
 <script setup>
-// Importaciones necesarias
 import { ref, onMounted } from 'vue';
 import { getAllCompanies, updateCompanyMetrics } from '~/services/companyService'; // Importa la función del servicio
 import { getProductsByCompanyId } from '~/services/productService';
@@ -22,26 +19,25 @@ onMounted(async () => {
 });
 
 
-// Funcion de redirección a la página de productos de una empresa
-// Entrada: companyId
+// Funciones para manejar las acciones de los botones
+/*
+const viewDeliveries = (companyId) => {
+  window.location.href = `/orders/company/${companyId}`; // Cambia la ruta según tu estructura
+  window.location.href = `/company/${companyId}/completed-deliveries`; // Cambia la ruta según tu estructura
+};
+*/
 const viewCompletedDeliveries = (companyId) => {
   window.location.href = `/company/${companyId}/completed-deliveries`; // Cambia la ruta según tu estructura
 };
 
-// Función de redirección a la página de entregas fallidas de una empresa
-// Entrada: companyId
 const viewFailedDeliveries = (companyId) => {
   window.location.href = `/company/${companyId}/failed-deliveries`; // Cambia la ruta para que coincida con la estructura dinámica
 };
 
-// Función de redirección a la página de todas las entregas de una empresa
-// Entrada: companyId
 const viewAllDeliveries = (companyId) => {
   window.location.href = `/company/${companyId}/deliveries`; // Cambia la ruta para que coincida con la estructura dinámica
 };
 
-// Función de redirección a la página de productos de una empresa
-// Entrada: companyId
 const viewProducts = (companyId) => {
   window.location.href = `/company/${companyId}/products`;
 };
@@ -51,8 +47,6 @@ const viewProducts = (companyId) => {
     layout: 'admin', // Usa el layout de administrador
   });
 </script>
-
-<!-- Template para mostrar las empresas en vista de admin y los botones de redirección-->
 
 <template>
   <div>

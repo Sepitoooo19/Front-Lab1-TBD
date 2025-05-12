@@ -1,19 +1,12 @@
-<!-- pagina de login-->
 <script setup>
-// Importa las dependencias necesarias
 import { useRouter } from 'vue-router';
 import axios from 'axios';
-// Const reactivas
+
 const router = useRouter();
 const username = ref('');
 const password = ref('');
 const loginError = ref('');
 
-// Función para manejar el inicio de sesión
-// Método: POST, URL: http://localhost:8090/auth/login
-// Entrada: username y password
-// Salida: token y rol del usuario
-// Descripción: Esta función envía una solicitud de inicio de sesión al backend y maneja la respuesta. Si el inicio de sesión es exitoso, guarda el token y el rol en localStorage y redirige al usuario a la página correspondiente según su rol. Si hay un error, muestra un mensaje de error.
 const handleLogin = async () => {
   try {
     const response = await axios.post('http://localhost:8090/auth/login', {
@@ -47,13 +40,10 @@ const handleLogin = async () => {
   }
 };
 
-// Función para redirigir a la página de registro
 const goToRegister = () => {
   router.push('/register');
 };
 </script>
-
-<!-- Template que contiene el formulario de inicio de sesión y el enlace a la página de registro-->
 
 <template>
   <div class="login max-w-md mx-auto bg-white p-8 shadow-md rounded">
