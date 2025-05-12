@@ -1,16 +1,16 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { getDealerNameById } from '~/services/dealerService';
-import { getAverageDeliveryTimeByDealer } from '~/services/dealerService';
+import { getAverageDeliveryTimeByDealer, getAuthenticatedDealerAverageDeliveryTime, getAuthenticatedDealerDeliveryCount } from '~/services/dealerService'; // Importa el nuevo servicio
 import { getDealerRatings } from '~/services/ratingService';
-import { getDealerDeliveryCount } from '~/services/dealerService';
 
-const dealerId = 1; // Reemplaza con el ID dinámico del repartidor
+const dealerId = 1; // Reemplaza con el ID dinámico del repartidor si es necesario
 const dealer = ref({
   name: '',
   avgWaitTime: null,
   rating: null,
-  deliveryCount: null,
+  deliveryCount: null, // Número de entregas
+  authenticatedAvgWaitTime: null, // Tiempo promedio de espera del repartidor autenticado
 });
 const errorMessage = ref(null);
 
@@ -19,9 +19,15 @@ onMounted(async () => {
     // Obtener el nombre del repartidor
     dealer.value.name = await getDealerNameById(dealerId);
 
-    // Obtener el tiempo de espera promedio
+    // Obtener el tiempo de espera promedio (por ID del repartidor)
     const avgWaitTimeData = await getAverageDeliveryTimeByDealer(dealerId);
     dealer.value.avgWaitTime = avgWaitTimeData.avg_delivery_time_hours;
+
+    // Obtener el tiempo de espera promedio del repartidor autenticado
+    dealer.value.authenticatedAvgWaitTime = await getAuthenticatedDealerAverageDeliveryTime();
+
+    // Obtener el número de entregas del repartidor autenticado
+    dealer.value.deliveryCount = await getAuthenticatedDealerDeliveryCount();
 
     // Obtener la puntuación promedio
     const ratings = await getDealerRatings(dealerId);
@@ -31,19 +37,16 @@ onMounted(async () => {
     } else {
       dealer.value.rating = 'Sin calificaciones';
     }
-
-    // Obtener el número de entregas
-    dealer.value.deliveryCount = await getDealerDeliveryCount(dealerId);
   } catch (error) {
     console.error('Error al cargar los datos del repartidor:', error);
     errorMessage.value = 'Hubo un error al cargar los datos del repartidor.';
   }
 });
-
 definePageMeta({
   layout: 'dealer', // Usa el layout de repartidor
 });
 </script>
+
 
 <template>
   <div>
@@ -52,7 +55,7 @@ definePageMeta({
     <ul v-else>
       <li><strong>Nombre:</strong> {{ dealer.name }}</li>
       <li><strong>Puntuación Promedio:</strong> {{ dealer.rating }}</li>
-      <li><strong>Tiempo de Espera Promedio:</strong> {{ dealer.avgWaitTime }} horas</li>
+      <li><strong>Tiempo de Espera Promedio:</strong> {{ dealer.authenticatedAvgWaitTime?.toFixed(2) }} horas</li>
       <li><strong>Número de Entregas:</strong> {{ dealer.deliveryCount }}</li>
     </ul>
   </div>

@@ -1,28 +1,31 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { useRuntimeConfig } from '#app';
-import { getOrdersByDealer } from '~/services/ordersService';
-import type { Order } from '~/types/types';
+import { getOrdersByDealerDto } from '~/services/ordersService'; // Asegúrate de usar el método correcto
+import type { OrderTotalProductsDTO } from '~/types/types'; // Ajusta el tipo según el DTO
 
+// Configuración y estado
 const config = useRuntimeConfig();
-const orders = ref<Order[]>([]);
+const orders = ref<OrderTotalProductsDTO[]>([]); // Cambia el tipo a OrderTotalProductsDTO
 
+// Cargar las órdenes al montar el componente
 onMounted(async () => {
   try {
     // Llamada al servicio que usa el token del dealer autenticado
-    orders.value = await getOrdersByDealer();
+    orders.value = await getOrdersByDealerDto();
   } catch (error) {
     console.error('Error al cargar el historial de órdenes:', error);
     alert('Error al cargar el historial de órdenes');
   }
 });
 
+// Definir metadatos de la página
 definePageMeta({
   layout: 'dealer',
 });
 
 // Función para formatear la fecha de entrega
-const formatDeliveryDate = (order: Order) => {
+const formatDeliveryDate = (order: OrderTotalProductsDTO) => {
   if (order.status === 'FALLIDA') {
     return 'No se pudo entregar';
   }
@@ -48,10 +51,10 @@ const formatDeliveryDate = (order: Order) => {
       </thead>
       <tbody>
         <tr v-for="order in orders" :key="order.id" class="hover:bg-gray-50">
-          <td class="px-4 py-2">{{ order.id }}</td>
+          <td class="px-4 py-2">{{ order.id }}</td> <!-- Cambiado de order.orderId a order.id -->
           <td class="px-4 py-2">{{ new Date(order.orderDate).toLocaleString() }}</td>
           <td class="px-4 py-2">{{ formatDeliveryDate(order) }}</td>
-          <td class="px-4 py-2">{{ order.products }}</td>
+          <td class="px-4 py-2">{{ order.totalProducts }}</td>
           <td class="px-4 py-2">${{ order.totalPrice }}</td>
           <td class="px-4 py-2">{{ order.status }}</td>
         </tr>

@@ -80,3 +80,39 @@ export const getTopPerformingDealers = async (): Promise<any[]> => {
 
   return await response.json();
 };
+
+export const getAuthenticatedDealerAverageDeliveryTime = async (): Promise<number> => {
+  const config = useRuntimeConfig();
+  const token = localStorage.getItem('token'); // Obtén el token JWT del almacenamiento local
+
+  const response = await fetch(`${config.public.apiBase}/dealers/average-delivery-time-authenticated`, {
+    headers: {
+      Authorization: `Bearer ${token}`, // Agrega el token JWT al encabezado
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Error al obtener el tiempo promedio de espera del repartidor autenticado');
+  }
+
+  const data = await response.json();
+  return typeof data === 'number' ? data : parseFloat(data);
+};
+
+export const getAuthenticatedDealerDeliveryCount = async (): Promise<number> => {
+  const config = useRuntimeConfig();
+  const token = localStorage.getItem('token'); // Obtén el token JWT del almacenamiento local
+
+  const response = await fetch(`${config.public.apiBase}/dealers/delivery-count`, {
+    headers: {
+      Authorization: `Bearer ${token}`, // Agrega el token JWT al encabezado
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Error al obtener el número de entregas del repartidor autenticado');
+  }
+
+  const data = await response.json();
+  return typeof data === 'number' ? data : parseInt(data, 10);
+};

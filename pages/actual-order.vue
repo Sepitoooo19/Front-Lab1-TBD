@@ -4,7 +4,6 @@
     <div v-if="order" class="border border-gray-300 rounded-lg shadow-md p-6 bg-white">
       <h2 class="text-xl font-bold">N° Orden: {{ order.id }}</h2>
       <p><strong>Id Repartidor:</strong> {{ order.dealerId || 'N/A' }}</p>
-      <p><strong>Nombre Repartidor:</strong> {{ order.dealerId.name || 'N/A' }}</p>
       <p><strong>Monto:</strong> ${{ order.totalPrice }}</p>
       <p><strong>Estado:</strong> {{ order.status }}</p>
       <p><strong>Fecha de Orden:</strong> {{ new Date(order.orderDate).toLocaleString() }}</p>
@@ -37,14 +36,14 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
-import { getActiveOrderByDealer, updateOrderStatus } from '~/services/ordersService';
-import type { Order } from '~/types/types';
+import { getActiveOrderNameAddresDTOByDealer, updateOrderStatus } from '~/services/ordersService';
+import type { Order, OrderNameAddressDTO  } from '~/types/types';
 
-const order = ref<Order | null>(null);
+const order = ref<OrderNameAddressDTO  | null>(null);
 
 const loadActiveOrder = async () => {
   try {
-    const activeOrder = await getActiveOrderByDealer();
+    const activeOrder = await getActiveOrderNameAddresDTOByDealer();
     order.value = activeOrder;
   } catch (err) {
     console.error('Error al cargar la orden activa:', err);

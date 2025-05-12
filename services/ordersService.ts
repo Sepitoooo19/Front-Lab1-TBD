@@ -1,5 +1,5 @@
 
-import type { Product, Order, TopSpender } from '~/types/types';
+import type { Product, Order, TopSpender, OrderTotalProductsDTO, OrderNameAddressDTO  } from '~/types/types';
 
 
 
@@ -301,4 +301,38 @@ export const updateOrderStatus = async (orderId: number, body: { status: string,
   }
 
   return await response.json().catch(() => null);
+};
+
+export const getOrdersByDealerDto = async (): Promise<OrderTotalProductsDTO[]> => {
+  const config = useRuntimeConfig();
+  const token = localStorage.getItem('token'); // Obtén el token JWT del almacenamiento local
+
+  const response = await fetch(`${config.public.apiBase}/orders/dealer/dto/orders`, {
+    headers: {
+      Authorization: `Bearer ${token}`, // Agrega el token JWT al encabezado
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Error al obtener las órdenes del repartidor autenticado');
+  }
+
+  return await response.json();
+};
+
+export const getActiveOrderNameAddresDTOByDealer = async (): Promise<OrderNameAddressDTO> => {
+  const config = useRuntimeConfig();
+  const token = localStorage.getItem('token'); // Obtén el token JWT del almacenamiento local
+
+  const response = await fetch(`${config.public.apiBase}/orders/dealer/dto/active-order`, {
+    headers: {
+      Authorization: `Bearer ${token}`, // Agrega el token JWT al encabezado
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Error al obtener la orden activa del repartidor');
+  }
+
+  return await response.json();
 };
