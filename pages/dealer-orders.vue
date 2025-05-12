@@ -1,4 +1,7 @@
+<!-- pagina que muestra el historial de ordenes del repartidor-->
+
 <script setup lang="ts">
+// Importaciones necesarias
 import { ref, onMounted } from 'vue';
 import { useRuntimeConfig } from '#app';
 import { getOrdersByDealerDto } from '~/services/ordersService'; // Asegúrate de usar el método correcto
@@ -32,6 +35,8 @@ const formatDeliveryDate = (order: OrderTotalProductsDTO) => {
   return order.deliveryDate ? new Date(order.deliveryDate).toLocaleString() : 'EN PROCESO';
 };
 </script>
+
+<!-- Template para mostrar el historial de órdenes del repartidor -->
 
 <template>
   <div class="p-6">

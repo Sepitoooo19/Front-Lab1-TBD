@@ -1,4 +1,7 @@
+<!-- page para mostrar el perfil del repartidor y su calificación-->
+
 <script setup>
+// Importa los módulos necesarios
 import { ref, onMounted } from 'vue';
 import { getDealerNameById } from '~/services/dealerService';
 import { getAverageDeliveryTimeByDealer, getAuthenticatedDealerAverageDeliveryTime, getAuthenticatedDealerDeliveryCount } from '~/services/dealerService'; // Importa el nuevo servicio
@@ -14,6 +17,11 @@ const dealer = ref({
 });
 const errorMessage = ref(null);
 
+// Cargar los datos del repartidor al montar el componente
+// Método: getDealerNameById, getAverage
+//DeliveryTimeByDealer, getDealerRatings y getDealerDeliveryCount
+// Entrada: dealerId
+// Salida: dealer (con nombre, tiempo de espera promedio, puntuación y número de entregas)
 onMounted(async () => {
   try {
     // Obtener el nombre del repartidor

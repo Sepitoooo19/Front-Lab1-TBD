@@ -1,6 +1,9 @@
 import axios from 'axios';
 const config = useRuntimeConfig();
 
+// Función para iniciar sesión
+// Entrada : email y password
+// Salida : token de autenticación
 export const login = async (email: string, password: string) => {
   const response = await fetch(`${config.public.apiBase}/auth/login`, {
     method: "POST",
@@ -13,7 +16,9 @@ export const login = async (email: string, password: string) => {
   return await response.json();
 };
 
-
+// Función para registrar un nuevo usuario
+// Entrada : datos del usuario
+// Salida : token de autenticación
 export const register = async (user: any) => {
   const response = await fetch(`${config.public.apiBase}/auth/register`, {
     method: "POST",
@@ -26,6 +31,9 @@ export const register = async (user: any) => {
   return await response.json();
 };
 
+// Funcion para cerrar sesión
+// Entrada : token de autenticación
+// Salida : eliminar el token del localStorage
 export const logout = async () => {
   const token = localStorage.getItem('token');
   if (token) {

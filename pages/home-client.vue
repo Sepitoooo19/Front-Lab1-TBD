@@ -1,4 +1,4 @@
- 
+ <!-- pagina principal del cliente-->
   <script setup>
   definePageMeta({
     layout: 'client', // Usa el layout de cliente

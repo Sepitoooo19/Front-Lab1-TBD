@@ -1,11 +1,13 @@
+<!-- page que muestra todas las ordenes en vista admin-->
 
 <script setup lang="ts">
+// Importa las dependencias necesarias
 import { ref, onMounted } from 'vue';
 import { getAllOrders } from '~/services/ordersService'; // Importa el servicio para obtener las órdenes
 import { getNameByClientId } from '~/services/clientService'; // Importa el servicio para obtener el nombre del cliente
 import { getDealerNameById } from '~/services/dealerService';
 import type { Order } from '~/types/types'; // Importa la interfaz Order
-
+// Const orders para almacenar las órdenes
 const orders = ref<Order[]>([]); // Lista de órdenes
 
 // Función para formatear fechas
@@ -14,6 +16,9 @@ const formatDate = (dateStr: string) => {
 };
 
 // Carga las órdenes al montar el componente
+// Método: getAllOrders, getNameByClientId y getDealerNameById
+// Entrada: token (localStorage) y dealerId 
+// Salida: orders
 onMounted(async () => {
   try {
     const ordersData: Order[] = await getAllOrders(); // Obtén todas las órdenes
@@ -49,6 +54,8 @@ definePageMeta({
     middleware: 'auth-role'
 });
 </script>
+
+<!-- Muestra las órdenes en una tabla-->
 
 <template>
   <div class="p-6">

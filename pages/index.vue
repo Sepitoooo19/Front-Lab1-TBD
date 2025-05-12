@@ -1,3 +1,4 @@
+<!-- pagina principal redirigida al login-->
 <script setup>
 import { useRouter } from 'vue-router';
 

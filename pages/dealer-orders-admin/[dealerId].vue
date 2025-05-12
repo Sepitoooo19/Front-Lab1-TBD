@@ -1,4 +1,7 @@
+<!-- Esta page muestra el historial de órdenes de un dealer específico en vista de administrador -->
+
 <script setup lang="ts">
+// Importa las dependencias necesarias
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { getOrdersByDealerId, updateOrderStatusByDealerId } from '~/services/ordersService';
@@ -7,9 +10,12 @@ import type { Order } from '~/types/types';
 // Obtener el dealerId de la URL
 const route = useRoute();
 const dealerId = Number(route.params.dealerId);
-
 const orders = ref<Order[]>([]);
 
+// Actualiza el estado de una orden
+// Metodo: updateOrderStatusByDealerId 
+// Entrada: orderId (ID de la orden), dealerId (ID del dealer), newStatus (nuevo estado)
+// Salida: Actualiza el estado de la orden en la lista local y en el servidor
 const updateOrderStatus = async (orderId: number, newStatus: string) => {
   try {
     // Llamar a la función del servicio para actualizar el estado de la orden
@@ -28,6 +34,10 @@ const updateOrderStatus = async (orderId: number, newStatus: string) => {
   }
 };
 
+// Carga las órdenes del dealer al montar el componente
+// Metodo: getOrdersByDealerId
+// Entrada: dealerId (ID del dealer)
+// Salida: orders (Lista de órdenes del dealer)
 onMounted(async () => {
   try {
     // Llamada al servicio para obtener las órdenes del dealer actual
@@ -42,6 +52,7 @@ definePageMeta({
 });
 </script>
 
+<!-- Este template muestra una tabla con el historial de órdenes del dealer y permite actualizar el estado de las órdenes -->
 <template>
   <div class="p-6">
     <h1 class="text-2xl font-bold mb-4">Historial de Órdenes</h1>
