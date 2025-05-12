@@ -105,56 +105,7 @@ definePageMeta({
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { getActiveOrderNameAddresDTOByDealer, updateOrderStatus } from '~/services/ordersService';
-import type { Order, OrderNameAddressDTO  } from '~/types/types';
 
-const order = ref<OrderNameAddressDTO  | null>(null);
-
-const loadActiveOrder = async () => {
-  try {
-    const activeOrder = await getActiveOrderNameAddresDTOByDealer();
-    order.value = activeOrder;
-  } catch (err) {
-    console.error('Error al cargar la orden activa:', err);
-    order.value = null;
-  }
-};
-
-const updateOrder = async (newStatus: string) => {
-  if (!order.value) return;
-  try {
-    const body: any = { status: newStatus };
-    
-    // Si es un fallo, asignamos null a la fecha de entrega
-    if (newStatus === 'FALLIDA') {
-      body.deliveryDate = null;
-    }
-    
-    await updateOrderStatus(order.value.id, body);
-    const successMessage = newStatus === 'ENTREGADO' 
-      ? 'Orden entregada exitosamente.' 
-      : 'La orden fue marcada como fallida.';
-    alert(successMessage);
-    order.value = null;
-  } catch (err) {
-    console.error(`Error al actualizar el estado a ${newStatus}:`, err);
-    alert(`Error: ${(err as Error).message}`);
-  }
-};
-
-const deliverOrder = () => updateOrder('ENTREGADO');
-const failOrder = () => updateOrder('FALLIDA');
-
-onMounted(() => {
-  loadActiveOrder();
-});
-
-definePageMeta({
-  layout: 'dealer',
-});
-</script>
 
 <style scoped> 
 </style>

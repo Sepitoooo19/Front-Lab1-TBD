@@ -65,14 +65,7 @@ definePageMeta({
     <h1 class="text-2xl font-bold mb-4">Lista de Dealers</h1>
 
     <!-- Botón para crear dealer -->
-    <div class="flex justify-end mb-4">
-      <button
-        class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded"
-        @click="createDealer"
-      >
-        Crear Dealer
-      </button>
-    </div>
+    
 
     <!-- Tabla de dealers -->
     <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow">
@@ -98,12 +91,7 @@ definePageMeta({
           <td class="px-4 py-2">{{ dealer.vehicle }}</td>
           <td class="px-4 py-2">{{ dealer.plate }}</td>
           <td class="px-4 py-2 space-x-2">
-            <button
-              class="bg-yellow-400 hover:bg-yellow-500 text-white font-semibold py-1 px-2 rounded"
-              @click="editDealer(dealer)"
-            >
-              Editar
-            </button>
+            
             <button
               class="bg-red-500 hover:bg-red-600 text-white font-semibold py-1 px-2 rounded"
               @click="deleteDealer(dealer.id)"
