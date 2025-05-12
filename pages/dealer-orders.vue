@@ -1,16 +1,24 @@
+<!-- pagina que muestra el historial de ordenes del repartidor-->
+
 <script setup lang="ts">
+// Importaciones necesarias
 import { ref, onMounted } from 'vue';
 import { useRuntimeConfig } from '#app';
-import { getOrdersByDealer } from '~/services/ordersService';
-import type { Order } from '~/types/types';
+import { getOrdersByDealerDto } from '~/services/ordersService'; // Asegúrate de usar el método correcto
+import type { OrderTotalProductsDTO } from '~/types/types'; // Ajusta el tipo según el DTO
 
+// Configuración y estado
 const config = useRuntimeConfig();
-const orders = ref<Order[]>([]);
+const orders = ref<OrderTotalProductsDTO[]>([]); // Cambia el tipo a OrderTotalProductsDTO
 
+// Función para obtener las ordenes del dealer autenticado
+// Metodo: getOrdersByDealer
+// Entrada: token (localStorage)
+// Salida: orders
 onMounted(async () => {
   try {
     // Llamada al servicio que usa el token del dealer autenticado
-    orders.value = await getOrdersByDealer();
+    orders.value = await getOrdersByDealerDto();
   } catch (error) {
     console.error('Error al cargar el historial de órdenes:', error);
     alert('Error al cargar el historial de órdenes');
@@ -22,13 +30,18 @@ definePageMeta({
 });
 
 // Función para formatear la fecha de entrega
-const formatDeliveryDate = (order: Order) => {
+// Metodo: new Date
+// Entrada: order (orden)
+// Salida: fecha formateada
+const formatDeliveryDate = (order: OrderTotalProductsDTO) => {
   if (order.status === 'FALLIDA') {
     return 'No se pudo entregar';
   }
   return order.deliveryDate ? new Date(order.deliveryDate).toLocaleString() : 'EN PROCESO';
 };
 </script>
+
+<!-- Template para mostrar el historial de órdenes del repartidor -->
 
 <template>
   <div class="p-6">
@@ -51,7 +64,7 @@ const formatDeliveryDate = (order: Order) => {
           <td class="px-4 py-2">{{ order.id }}</td>
           <td class="px-4 py-2">{{ new Date(order.orderDate).toLocaleString() }}</td>
           <td class="px-4 py-2">{{ formatDeliveryDate(order) }}</td>
-          <td class="px-4 py-2">{{ order.products }}</td>
+          <td class="px-4 py-2">{{ order.totalProducts }}</td>
           <td class="px-4 py-2">${{ order.totalPrice }}</td>
           <td class="px-4 py-2">{{ order.status }}</td>
         </tr>

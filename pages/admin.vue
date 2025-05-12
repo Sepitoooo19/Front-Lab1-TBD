@@ -1,4 +1,4 @@
-
+<!-- pagina principal del admin-->
   <script setup>
   </script>
   

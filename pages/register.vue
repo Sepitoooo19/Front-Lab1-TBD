@@ -1,4 +1,7 @@
+<!-- pagina de registro-->
+
 <script setup>
+// Importa las dependencias necesarias
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
@@ -18,6 +21,10 @@ const form = ref({
 });
 const registerError = ref('');
 
+// Función para manejar el registro
+// Método: POST, URL: http://localhost:8090/auth/register
+// Entrada: form (datos del formulario)
+// Salida: respuesta del backend
 const handleRegister = async () => {
   registerError.value = "";
   try {
@@ -53,6 +60,7 @@ const handleRegister = async () => {
   }
 };
 
+// Función para actualizar campos según el rol seleccionado
 const updateFields = () => {
   if (form.value.role === 'DEALER') {
     form.value.address = '';
@@ -62,6 +70,7 @@ const updateFields = () => {
   }
 };
 
+// Función para redirigir a la página de inicio de sesión
 const goToLogin = () => {
   router.push('/login');
 };

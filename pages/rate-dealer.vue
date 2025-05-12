@@ -1,9 +1,13 @@
+<!-- page para calificar al repartidor-->
+
 <script setup lang="ts">
+// Importa las dependencias necesarias
 import { ref, onMounted } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { addRating } from '~/services/ratingService';
 import { getDealerNameById } from '~/services/dealerService'; // Importa el servicio
 
+// Const reactivas
 const router = useRouter();
 const route = useRoute();
 
@@ -12,6 +16,7 @@ const orderId = ref<number | null>(route.query.orderId ? parseInt(route.query.or
 const clientId = ref<number | null>(route.query.clientId ? parseInt(route.query.clientId as string) : null);
 const dealerName = ref<string | null>(null); // Almacena el nombre del repartidor
 
+// Verifica si los parámetros necesarios están presentes
 if (!dealerId.value || !orderId.value || !clientId.value) {
   alert('Faltan datos para calificar al repartidor.');
   router.push('/client-orders'); // Redirige si faltan datos
@@ -22,6 +27,10 @@ const comment = ref<string>('');
 const errorMessage = ref<string | null>(null);
 
 // Cargar el nombre del repartidor
+// Método: getDealerNameById
+// Entrada: dealerId (ID del repartidor)
+// Salida: dealerName (nombre del repartidor)
+// Esta función se ejecuta al montar el componente
 onMounted(async () => {
   try {
     if (dealerId.value) {
@@ -34,6 +43,10 @@ onMounted(async () => {
 });
 
 // Función para guardar la calificación
+// Método: addRating
+// Entrada: rating (calificación), comment (comentario), date (fecha), clientId (ID del cliente), dealerId (ID del repartidor), orderId (ID del pedido)
+// Salida: Redirige a la lista de órdenes después de guardar
+// Esta función se ejecuta al hacer clic en el botón "Guardar Calificación"
 const submitRating = async () => {
   if (!rating.value || rating.value < 1 || rating.value > 5) {
     errorMessage.value = 'La calificación debe estar entre 1 y 5.';
@@ -57,6 +70,8 @@ const submitRating = async () => {
   }
 };
 </script>
+
+<!-- template donde se puede calificar al repartidor-->
 
 <template>
   <div class="p-6">

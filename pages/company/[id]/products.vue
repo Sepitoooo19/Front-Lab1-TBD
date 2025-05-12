@@ -1,16 +1,22 @@
-
+<!-- Pagina que muestra los productos de una empresa en vista de admin -->
 
 <script setup>
+// Importa las dependencias necesarias
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { getProductsByCompanyId } from '~/services/productService'; // Servicio para obtener productos
 import { getCompanyById } from '~/services/companyService'; // Servicio para obtener la empresa
 
+// Define las variables reactivas
 const route = useRoute();
 const companyId = route.params.id; // Obtén el ID de la empresa desde la URL
 const products = ref([]); // Lista de productos
 const company = ref({}); // Datos de la empresa
 
+// Obtiene los productos y los datos de la empresa al montar el componente
+// Metodo: getProductsByCompanyId y getCompanyById
+// Entrada: companyId (ID de la empresa)
+// Salida: products (Lista de productos) y company (Datos de la empresa)
 onMounted(async () => {
   try {
     // Carga los productos de la empresa
@@ -28,6 +34,8 @@ definePageMeta({
   layout: 'admin', // Usa el layout de administrador
 });
 </script>
+
+<!-- Este template muestra una tabla con los productos de la empresa -->
 
 <template>
   <div>

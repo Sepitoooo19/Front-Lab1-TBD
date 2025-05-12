@@ -1,6 +1,9 @@
 const config = useRuntimeConfig();
 import type { OrderDetails } from "~/types/types";
 
+// Funcion para crear los detalles de la ultima orden
+// Entrada : metodo de pago, total de productos y precio
+// Salida : Objeto de los detalles de la orden
 export const createOrderDetailsForLastOrder = async (paymentMethod: string, totalProducts: number, price: number): Promise<void> => {
   const response = await fetch(`${config.public.apiBase}/order-details/create-for-last-order`, {
     method: "POST",
@@ -26,6 +29,9 @@ export const createOrderDetailsForLastOrder = async (paymentMethod: string, tota
   return; // Si no hay cuerpo, simplemente retorna
 };
 
+// Funcion para obtener los detalles de un pedido por su ID
+// Entrada : id del pedido
+// Salida : Objeto de los detalles del pedido
 export const getOrderDetailsByOrderId = async (orderId: number): Promise<OrderDetails[]> => {
   const config = useRuntimeConfig();
   const token = localStorage.getItem('authToken'); // Obtén el token del localStorage
@@ -45,6 +51,9 @@ export const getOrderDetailsByOrderId = async (orderId: number): Promise<OrderDe
   return await response.json();
 };
 
+// Funcion para obtener el método de pago más utilizado en pedidos urgentes
+// Entrada : Ninguna
+// Salida : Objeto con el método de pago y el conteo
 export const getMostUsedPaymentMethodForUrgentOrders = async (): Promise<{ method: string; count: number }> => {
   const response = await fetch(`${config.public.apiBase}/order-details/urgent/payment-method`);
   if (!response.ok) {

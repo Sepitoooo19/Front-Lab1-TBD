@@ -1,15 +1,21 @@
+<!-- Lista de entregas de la empresa por id para el admin -->
 
 <script setup>
+// Importa las dependencias necesarias
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { getAllOrders } from '~/services/ordersService'; // Importa el servicio para obtener las entregas fallidas
+import { getAllOrders } from '~/services/ordersService'; // Importa el servicio para obtener las entregas 
 
+// Define las variables reactivas
 const route = useRoute();
 const companyId = route.params.id; // Obtiene el parámetro de la ruta
-const failedOrders = ref([]); // Lista de entregas fallidas
+const failedOrders = ref([]); // Lista de entregas 
 const error = ref(null); // Manejo de errores
 
-// Obtén las entregas fallidas al montar el componente
+// Obtén las entregas  al montar el componente
+// Metodo: getAllOrders
+// Entrada: companyId (ID de la empresa)
+// Salida: failedOrders (Lista de entregas fallidas) y error (Manejo de errores)
 onMounted(async () => {
   try {
     failedOrders.value = await getAllOrders(companyId);
@@ -23,6 +29,8 @@ onMounted(async () => {
     layout: 'admin', // Usa el layout de administrador
   });
 </script>
+
+<!-- Este template muestra una tabla con las entregas de la empresa -->
 
 <template>
   <div>
