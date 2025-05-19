@@ -1,70 +1,70 @@
-<!-- page para mostrar el perfil del repartidor y su calificación-->
-
 <script setup>
-// Importa los módulos necesarios
-import { ref, onMounted } from 'vue';
-import { getDealerNameById } from '~/services/dealerService';
-import { getAverageDeliveryTimeByDealer, getAuthenticatedDealerAverageDeliveryTime, getAuthenticatedDealerDeliveryCount } from '~/services/dealerService'; // Importa el nuevo servicio
-import { getDealerRatings } from '~/services/ratingService';
+import { getAuthenticatedDealerProfile } from '~/services/dealerService';
 
-const dealerId = 1; // Reemplaza con el ID dinámico del repartidor si es necesario
 const dealer = ref({
   name: '',
-  avgWaitTime: null,
-  rating: null,
-  deliveryCount: null, // Número de entregas
-  authenticatedAvgWaitTime: null, // Tiempo promedio de espera del repartidor autenticado
+  rating: 'Sin calificaciones',
+  avgWaitTime: '0.00 horas',
+  deliveryCount: 0
 });
-const errorMessage = ref(null);
 
-// Cargar los datos del repartidor al montar el componente
-// Método: getDealerNameById, getAverage
-//DeliveryTimeByDealer, getDealerRatings y getDealerDeliveryCount
-// Entrada: dealerId
-// Salida: dealer (con nombre, tiempo de espera promedio, puntuación y número de entregas)
+const error = ref(null);
+
 onMounted(async () => {
   try {
-    // Obtener el nombre del repartidor
-    dealer.value.name = await getDealerNameById(dealerId);
-
-    // Obtener el tiempo de espera promedio (por ID del repartidor)
-    const avgWaitTimeData = await getAverageDeliveryTimeByDealer(dealerId);
-    dealer.value.avgWaitTime = avgWaitTimeData.avg_delivery_time_hours;
-
-    // Obtener el tiempo de espera promedio del repartidor autenticado
-    dealer.value.authenticatedAvgWaitTime = await getAuthenticatedDealerAverageDeliveryTime();
-
-    // Obtener el número de entregas del repartidor autenticado
-    dealer.value.deliveryCount = await getAuthenticatedDealerDeliveryCount();
-
-    // Obtener la puntuación promedio
-    const ratings = await getDealerRatings(dealerId);
-    if (ratings.length > 0) {
-      const totalRatings = ratings.reduce((sum, rating) => sum + rating.rating, 0);
-      dealer.value.rating = (totalRatings / ratings.length).toFixed(2);
-    } else {
-      dealer.value.rating = 'Sin calificaciones';
-    }
-  } catch (error) {
-    console.error('Error al cargar los datos del repartidor:', error);
-    errorMessage.value = 'Hubo un error al cargar los datos del repartidor.';
+    const dealerData = await getAuthenticatedDealerProfile();
+    
+    // Manejo seguro del rating
+    const ratingValue = typeof dealerData.rating === 'number' 
+      ? dealerData.rating.toFixed(1)
+      : 'Sin calificaciones';
+    
+    // Manejo seguro del tiempo promedio
+    const avgWaitTimeValue = typeof dealerData.avgWaitTime === 'number'
+      ? `${dealerData.avgWaitTime.toFixed(2)} horas`
+      : '0.00 horas';
+    
+    dealer.value = {
+      name: dealerData.name || 'Sin nombre',
+      rating: ratingValue,
+      avgWaitTime: avgWaitTimeValue,
+      deliveryCount: dealerData.deliveryCount || 0
+    };
+    
+  } catch (err) {
+    error.value = err.message || 'Error al cargar el perfil';
+    console.error('Error:', err);
   }
 });
+
+// Definir metadatos de la página
 definePageMeta({
-  layout: 'dealer', // Usa el layout de repartidor
+  layout: 'dealer',
 });
 </script>
 
-
 <template>
-  <div>
-    <h1>Perfil del Repartidor</h1>
-    <div v-if="errorMessage" class="text-red-500">{{ errorMessage }}</div>
-    <ul v-else>
-      <li><strong>Nombre:</strong> {{ dealer.name }}</li>
-      <li><strong>Puntuación Promedio:</strong> {{ dealer.rating }}</li>
-      <li><strong>Tiempo de Espera Promedio:</strong> {{ dealer.authenticatedAvgWaitTime?.toFixed(2) }} horas</li>
-      <li><strong>Número de Entregas:</strong> {{ dealer.deliveryCount }}</li>
-    </ul>
+  <div class="p-4">
+    <h1 class="text-2xl font-bold mb-4">Perfil del Repartidor</h1>
+    
+    <div v-if="error" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+      {{ error }}
+    </div>
+    
+    <div v-else class="bg-white rounded-lg shadow p-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <h2 class="text-lg font-semibold">Información Personal</h2>
+          <p class="mt-2"><span class="font-medium">Nombre:</span> {{ dealer.name }}</p>
+        </div>
+        
+        <div>
+          <h2 class="text-lg font-semibold">Estadísticas</h2>
+          <p class="mt-2"><span class="font-medium">Calificación:</span> {{ dealer.rating }}</p>
+          <p class="mt-2"><span class="font-medium">Tiempo promedio:</span> {{ dealer.avgWaitTime }}</p>
+          <p class="mt-2"><span class="font-medium">Entregas realizadas:</span> {{ dealer.deliveryCount }}</p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>

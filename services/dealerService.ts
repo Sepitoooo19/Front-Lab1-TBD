@@ -140,3 +140,26 @@ export const getAuthenticatedDealerDeliveryCount = async (): Promise<number> => 
   const data = await response.json();
   return typeof data === 'number' ? data : parseInt(data, 10);
 };
+
+export const getAuthenticatedDealerProfile = async (): Promise<any> => {
+  const config = useRuntimeConfig();
+  const token = localStorage.getItem('token');
+  
+  try {
+    const response = await fetch(`${config.public.apiBase}/dealers/me`, {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.message || 'Error al obtener perfil');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error en dealerService:', error);
+    throw error;
+  }
+};
